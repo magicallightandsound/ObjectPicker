@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{15BE90F9-6CD2-399A-162C-D18158265ED1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectGenerator>VSTU</UnityProjectGenerator>
+    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityBuildTarget>Lumin:39</UnityBuildTarget>
+    <UnityVersion>2018.1.9f1-MLTP9.6</UnityVersion>
+    <RootNamespace></RootNamespace>
+    <LangVersion>4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoConfig>true</NoConfig>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_1_9;UNITY_2018_1;UNITY_2018;ENABLE_CACHING;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_DIRECTOR;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_LUMIN;PLATFORM_LUMIN_API;ENABLE_AUDIO;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_MICROPHONE;ENABLE_CLOTH;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_EVERYPLAY;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_LICENSE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RAKNET;ENABLE_SHADOWS;ENABLE_SPATIALTRACKING;ENABLE_TEXTUREID_MAP;ENABLE_UNET;ENABLE_UNITYWEBREQUEST;ENABLE_VR;ENABLE_VIDEO;ENABLE_WWW;SUPPORT_THREADS;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_1_9;UNITY_2018_1;UNITY_2018;ENABLE_CACHING;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_DIRECTOR;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_LUMIN;PLATFORM_LUMIN_API;ENABLE_AUDIO;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_MICROPHONE;ENABLE_CLOTH;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_EVERYPLAY;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_LICENSE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RAKNET;ENABLE_SHADOWS;ENABLE_SPATIALTRACKING;ENABLE_TEXTUREID_MAP;ENABLE_UNET;ENABLE_UNITYWEBREQUEST;ENABLE_VR;ENABLE_VIDEO;ENABLE_WWW;SUPPORT_THREADS;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Unity.PackageManagerUI.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.MagicLeap">
+      <HintPath>Library/ScriptAssemblies/Unity.XR.MagicLeap.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.XR.MagicLeap.Editor">
+      <HintPath>Library/ScriptAssemblies/Unity.XR.MagicLeap.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.StandardEvents">
+      <HintPath>Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.AIModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.ARModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.AccessibilityModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.AnimationModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.AssetBundleModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.AudioModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.BaselibModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.BaselibModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.ClothModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.CloudWebServicesModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.CloudWebServicesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.CoreModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.CrashReportingModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.DirectorModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.FacebookModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.FacebookModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.GameCenterModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.GridModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.HotReloadModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.IMGUIModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.ImageConversionModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.InputModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.JSONSerializeModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.ParticleSystemModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.ParticlesLegacyModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.ParticlesLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.PerformanceReportingModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.PhysicsModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.Physics2DModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.ScreenCaptureModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.SharedInternalsModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.SpatialTrackingModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.SpatialTrackingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.SpriteMaskModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.SpriteShapeModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.StyleSheetsModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.StyleSheetsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.SubstanceModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.TLSModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.TerrainModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.TerrainPhysicsModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.TextRenderingModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.TilemapModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.TimelineModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.TimelineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UIModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UIElementsModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UNETModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UmbraModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityAnalyticsModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityConnectModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityWebRequestModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.VRModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.VehiclesModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.VideoModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.WebModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.WebModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.WindModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="lumin/Tools/UnityEngine.XRModule">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\PlaybackEngines\lumin/Tools/UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Managed/UnityEditor">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\Managed/UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Managed/Unity.Locator">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\Managed/Unity.Locator.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TestRunner">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/TestRunner/Editor/UnityEditor.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TestRunner">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Timeline">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Timeline">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/Timeline/Editor/UnityEditor.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TreeEditor">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIAutomation">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UIAutomation/UnityEngine.UIAutomation.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UIAutomation">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UIAutomation/Editor/UnityEditor.UIAutomation.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.GoogleAudioSpatializer">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/Editor/UnityEditor.GoogleAudioSpatializer.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GoogleAudioSpatializer">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/RuntimeEditor/UnityEngine.GoogleAudioSpatializer.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.HoloLens">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Editor/UnityEditor.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.SpatialTracking">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/Editor/UnityEditor.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpatialTracking">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.VR">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Lumin.Extensions">
+      <HintPath>C:/Program Files/Unity 2018.1.9f1-MLTP9.6/Editor/Data/PlaybackEngines/lumin/UnityEditor.Lumin.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Analytics">
+      <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/Editor/UnityEditor.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.purchasing@2.0.1/UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Purchasing">
+      <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.purchasing@2.0.1/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StandardEvents">
+      <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="LuminUnityEditor">
+      <HintPath>Assets/MagicLeap/Libs/Editor/LuminUnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="MSA.Runtime">
+      <HintPath>Assets/MagicLeap/Soundfield/MSA.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="LuminUnity">
+      <HintPath>Assets/MagicLeap/Libs/LuminUnity.dll</HintPath>
+    </Reference>
+    <Reference Include="MSA.Editor">
+      <HintPath>Assets/MagicLeap/Soundfield/Editor/MSA.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityScript">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\UnityScript.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityScript.Lang">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\UnityScript.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang">
+      <HintPath>C:\Program Files\Unity 2018.1.9f1-MLTP9.6\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\Boo.Lang.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ObjectPicker.csproj">
+      <Project>{C4A453CC-3EEC-F168-8ADA-5F2EE7E94B74}</Project>
+      <Name>ObjectPicker</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\MagicLeap\CoreComponents\Editor\MLImageTrackerBehaviorEditor.cs" />
+    <Compile Include="Assets\MagicLeap\Scripts\Editor\BuildMabuWindow.cs" />
+    <Compile Include="Assets\MagicLeap\Scripts\Editor\MLVersionMenuItem.cs" />
+    <Compile Include="Assets\MagicLeap\Scripts\Editor\MusicExampleBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\MagicLeap\BackgroundMusicExample\music_manifest.xml" />
+    <None Include="Assets\MagicLeap\BackgroundMusicExample\readme.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\Controller.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\HandTracking.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\ImageCapture.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\ImageTracking.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\LightTracking.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\MCA.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\MediaPlayer.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\Meshing.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\Persistence.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\Placement.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\Planes.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\Raycast.txt" />
+    <None Include="Assets\MagicLeap\Examples\Documentation\VideoCapture.txt" />
+    <None Include="Assets\MagicLeap\Examples\Models\Controller\Shaders\ControllerDepthMask.shader" />
+    <None Include="Assets\MagicLeap\Examples\Plugins\Lumin\manifest.xml" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\BasicWorldSpace.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\MeshWorldSpace.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\PlaneEdge.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\PointCloud.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\UnlitColorTransparent.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\WorldVerticalWithFilter.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\WorldXZWithColor.shader" />
+    <None Include="Assets\MagicLeap\Examples\Shaders\WorldXZWithLerp.shader" />
+    <None Include="Assets\MagicLeap\Libs\Editor\LuminUnityEditor.xml" />
+    <None Include="Assets\MagicLeap\Libs\LuminUnity.xml" />
+    <None Include="Assets\MagicLeap\Soundfield\Release Notes.txt" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Styles\Main_Dark.uss" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Styles\Main_Light.uss" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\Alert.uxml" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\PackageDetails.uxml" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\PackageGroup.uxml" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\PackageItem.uxml" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\PackageList.uxml" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\PackageManagerWindow.uxml" />
+    <None Include="Packages\com.unity.package-manager-ui\Editor\Resources\Templates\PackageSearchFilterTabs.uxml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="GenerateTargetFrameworkMonikerAttribute" />
+</Project>
