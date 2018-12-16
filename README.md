@@ -2,6 +2,10 @@
 Magic Leap project that demos object picking and placement. 
 
 
+Use the Magic Leap controller and point the cursor at a Gameobject. Pull the trigger then use the controller to move the Gameobject around in worldspace.
+
+
+
 Requirements:
 - Magic Leap SDK v0.18.0
 - Unity 2018.1.9f1-MLTP9.6
