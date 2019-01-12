@@ -10,10 +10,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{90F5DA04-EF7D-1009-0458-3B8C502EF789}</ProjectGuid>
+    <ProjectGuid>{70C17B32-C421-CF4C-2F1B-4FF071D37EC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <AssemblyName>Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -48,7 +48,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>Lumin:39</UnityBuildTarget>
     <UnityVersion>2018.1.9f2-MLTP10</UnityVersion>
   </PropertyGroup>
@@ -61,23 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\MagicLeap\CoreComponents\Editor\MLImageTrackerBehaviorEditor.cs" />
-    <Compile Include="Assets\MagicLeap\Scripts\Editor\BuildMabuWindow.cs" />
-    <Compile Include="Assets\MagicLeap\Scripts\Editor\MLVersionMenuItem.cs" />
-    <Compile Include="Assets\MagicLeap\Scripts\Editor\MusicExampleBuilder.cs" />
-    <None Include="Assets\MagicLeap\Libs\Editor\LuminUnityEditor.xml" />
-    <Reference Include="Unity.XR.MagicLeap.Editor">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Library/ScriptAssemblies/Unity.XR.MagicLeap.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.XR.MagicLeap">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Library/ScriptAssemblies/Unity.XR.MagicLeap.dll</HintPath>
-    </Reference>
+    <Compile Include="Assets\Tests\InputControllerTestScript.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity 2018.1.9f2-MLTP10/Editor/Data/PlaybackEngines/lumin/Tools/UnityEngine.AIModule.dll</HintPath>
     </Reference>
@@ -374,10 +358,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{82158993-68A2-78CF-0F27-579FB9ACC27D}</Project>
-      <Name>Assembly-CSharp</Name>
-    </ProjectReference>
     <ProjectReference Include="Prestige.csproj">
       <Project>{B11321F8-1092-5137-611B-4E4E193A982D}</Project>
       <Name>Prestige</Name>
