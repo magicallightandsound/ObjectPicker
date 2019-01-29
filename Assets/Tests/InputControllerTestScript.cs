@@ -11,11 +11,11 @@ public class InputControllerTestScript {
         // Use the Assert class to test conditions.
 
         var inputController = new GameObject("InputController");
-        var inputControllerScript = inputController.AddComponent<InputController>();
+        var inputControllerScript = inputController.AddComponent<ActsAsInputController>();
         Assert.IsNotNull(inputControllerScript);
 
         var cursor = new GameObject("Cursor");
-        var cursorScript = cursor.AddComponent<Cursor>();
+        var cursorScript = cursor.AddComponent<ActsAsCursor>();
         Assert.IsNotNull(inputControllerScript);
         
         // cursorScript.inputController = inputControllerScript;
@@ -26,29 +26,29 @@ public class InputControllerTestScript {
 
     [Test]
     public void HasTriggerDownEventQueue() {
-        InputController.OnTriggerDown += OnTriggerDown;
-        InputController.OnTriggerDown -= OnTriggerDown;
+        ActsAsInputController.OnTriggerDown += OnTriggerDown;
+        ActsAsInputController.OnTriggerDown -= OnTriggerDown;
     }
 
     [Test]
     public void HasTriggerUpEventQueue()
     {
-        InputController.OnTriggerUp += OnTriggerUp;
-        InputController.OnTriggerUp -= OnTriggerUp;
+        ActsAsInputController.OnTriggerUp += OnTriggerUp;
+        ActsAsInputController.OnTriggerUp -= OnTriggerUp;
     }
 
     [Test]
     public void HasTouchpadGestureStartQueue()
     {
-        InputController.OnTouchpadGestureStart += TouchpadGestureStart;
-        InputController.OnTouchpadGestureStart -= TouchpadGestureStart;
+        ActsAsInputController.OnTouchpadGestureStart += TouchpadGestureStart;
+        ActsAsInputController.OnTouchpadGestureStart -= TouchpadGestureStart;
     }
 
     [Test]
     public void HasTouchpadGestureEndQueue()
     {
-        InputController.OnTouchpadGestureEnd += TouchpadGestureEnd;
-        InputController.OnTouchpadGestureEnd -= TouchpadGestureEnd;
+        ActsAsInputController.OnTouchpadGestureEnd += TouchpadGestureEnd;
+        ActsAsInputController.OnTouchpadGestureEnd -= TouchpadGestureEnd;
     }
 
 
@@ -57,16 +57,24 @@ public class InputControllerTestScript {
 
 
 
-    public void OnTriggerDown(byte controllerId, float value, GameObject gameObject, Transform cursorTransform)    {    }
+    public void OnTriggerDown(byte controllerId, float value, GameObject gameObject, Transform cursorTransform)
+    {
+    }
 
-    public void OnTriggerUp(byte controllerId, float value, GameObject gameObject, Transform cursorTransform)    {    }
+    public void OnTriggerUp(byte controllerId, float value, GameObject gameObject, Transform cursorTransform)
+    {
+    }
 
-    public void TouchpadGestureStart(byte controllerId,        MLInputControllerTouchpadGesture gesture,        Cursor cursor)
+    public void TouchpadGestureStart(byte controllerId,
+        MLInputControllerTouchpadGesture gesture,
+        ActsAsCursor cursor)
     {
 
     }
 
-    public void TouchpadGestureEnd(byte controllerId,        MLInputControllerTouchpadGesture gesture,        Cursor cursor)
+    public void TouchpadGestureEnd(byte controllerId,
+        MLInputControllerTouchpadGesture gesture,
+        ActsAsCursor cursor)
     {
 
     }

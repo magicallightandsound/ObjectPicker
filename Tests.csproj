@@ -297,16 +297,16 @@
       <HintPath>C:/Program Files/Unity 2018.1.9f2-MLTP10/Editor/Data/PlaybackEngines/lumin/UnityEditor.Lumin.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="LuminUnity">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Assets/MagicLeap/Libs/LuminUnity.dll</HintPath>
+      <HintPath>C:/Users/Rodney/Documents/MLProjects/ObjectPicker/Assets/MagicLeap/Libs/LuminUnity.dll</HintPath>
     </Reference>
     <Reference Include="LuminUnityEditor">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Assets/MagicLeap/Libs/Editor/LuminUnityEditor.dll</HintPath>
+      <HintPath>C:/Users/Rodney/Documents/MLProjects/ObjectPicker/Assets/MagicLeap/Libs/Editor/LuminUnityEditor.dll</HintPath>
     </Reference>
     <Reference Include="MSA.Runtime">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Assets/MagicLeap/Soundfield/MSA.Runtime.dll</HintPath>
+      <HintPath>C:/Users/Rodney/Documents/MLProjects/ObjectPicker/Assets/MagicLeap/Soundfield/MSA.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="MSA.Editor">
-      <HintPath>C:/Users/Rodney/Documents/ObjectPicker/Assets/MagicLeap/Soundfield/Editor/MSA.Editor.dll</HintPath>
+      <HintPath>C:/Users/Rodney/Documents/MLProjects/ObjectPicker/Assets/MagicLeap/Soundfield/Editor/MSA.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/Rodney/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
