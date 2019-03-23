@@ -47,19 +47,21 @@ public class InputController : MonoBehaviour
     [SerializeField]
     Cursor cursor = null;
 
-    public delegate void TriggerDown(byte controllerId, float value, GameObject gameObject, Transform cursorTransform);
-    public delegate void TriggerUp(byte controllerId, float value, GameObject gameObject, Transform cursorTransform);
+    public delegate void TriggerDown(float value, GameObject gameObject, Transform cursorTransform, InputController inputController);
+    public delegate void TriggerUp(float value, GameObject gameObject, Transform cursorTransform, InputController inputController);
 
     public static event TriggerDown OnTriggerDown;
     public static event TriggerUp OnTriggerUp;
 
-    public delegate void TouchpadGestureStart(byte controllerId,
+    public delegate void TouchpadGestureStart(
         MLInputControllerTouchpadGesture gesture,
-        Cursor cursor);
+        Cursor cursor,
+        InputController inputController);
 
-    public delegate void TouchpadGestureEnd(byte controllerId,
+    public delegate void TouchpadGestureEnd(
         MLInputControllerTouchpadGesture gesture,
-        Cursor cursor);
+        Cursor cursor,
+        InputController inputController);
 
     public static event TouchpadGestureEnd OnTouchpadGestureEnd;
     public static event TouchpadGestureStart OnTouchpadGestureStart;
@@ -71,7 +73,10 @@ public class InputController : MonoBehaviour
         return inputController;
     }
 
-
+    public Prestige.InputController GetPrestigeInputController()
+    {
+        return inputController;
+    }
 
     virtual public void Awake()
     {
@@ -144,10 +149,10 @@ public class InputController : MonoBehaviour
 
         if (hoveredGameObject == null)
         {
-            OnTriggerDown(controllerId, triggerValue, null, cursorTransform);
+            OnTriggerDown(triggerValue, null, cursorTransform, this);
         } else
         {
-            OnTriggerDown(controllerId, triggerValue, hoveredGameObject, cursorTransform);
+            OnTriggerDown(triggerValue, hoveredGameObject, cursorTransform, this);
         }
         
     }
@@ -162,23 +167,23 @@ public class InputController : MonoBehaviour
         GameObject hoveredGameObject = cursor.GetHoveredGameObject();
         Transform cursorTransform = cursor.GetAdjustedCursorTransform();
 
-        OnTriggerUp(controllerId, triggerValue, hoveredGameObject, cursorTransform);
+        OnTriggerUp(triggerValue, hoveredGameObject, cursorTransform, this);
     }
 
     virtual public void OnTouchpadGestureStartHandler(byte controllerId, MLInputControllerTouchpadGesture gesture)
     {
         if (OnTouchpadGestureStart != null)
         {
-            OnTouchpadGestureStart(controllerId, gesture, cursor);
+            OnTouchpadGestureStart(gesture, cursor, this);
         }
-        
+    
     }
 
     virtual public void OnTouchpadGestureEndHandler(byte controllerId, MLInputControllerTouchpadGesture gesture)
     {
         if (OnTouchpadGestureEnd != null)
         {
-            OnTouchpadGestureEnd(controllerId, gesture, cursor);
+            OnTouchpadGestureEnd(gesture, cursor, this);
         }
     }
 }
