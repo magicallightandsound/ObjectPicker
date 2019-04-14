@@ -7,8 +7,8 @@ Use the Magic Leap controller and point the cursor at a Gameobject. Pull the tri
 
 
 Requirements:
-- Magic Leap SDK v0.19.0
-- Unity 2018.1.9f1-MLTP10
+- Magic Leap SDK v0.20.0
+- Unity 2019.1.0f1 
 
 
 #
