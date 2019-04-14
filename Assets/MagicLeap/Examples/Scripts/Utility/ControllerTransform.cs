@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -29,11 +29,11 @@ namespace MagicLeap
 
         private Camera _camera;
 
-        // MCA-specific variables
+        // MobileApp-specific variables
         private bool _isCalibrated = false;
         private Quaternion _calibrationOrientation = Quaternion.identity;
-        private const float MCA_FORWARD_DISTANCE_FROM_CAMERA = 0.75f;
-        private const float MCA_UP_DISTANCE_FROM_CAMERA = -0.1f;
+        private const float MOBILEAPP_FORWARD_DISTANCE_FROM_CAMERA = 0.75f;
+        private const float MOBILEAPP_UP_DISTANCE_FROM_CAMERA = -0.1f;
         #endregion
 
         #region Unity Methods
@@ -66,7 +66,10 @@ namespace MagicLeap
                 else if (controller.Type == MLInputControllerType.MobileApp)
                 {
                     // For Mobile App, there is no positional data and orientation needs calibration
-                    transform.position = _camera.transform.position + _camera.transform.forward * MCA_FORWARD_DISTANCE_FROM_CAMERA + Vector3.up * MCA_UP_DISTANCE_FROM_CAMERA;
+                    transform.position = _camera.transform.position +
+                        (_camera.transform.forward * MOBILEAPP_FORWARD_DISTANCE_FROM_CAMERA * MagicLeapDevice.WorldScale) +
+                        (Vector3.up * MOBILEAPP_UP_DISTANCE_FROM_CAMERA * MagicLeapDevice.WorldScale);
+
                     if (_isCalibrated)
                     {
                         transform.rotation = _calibrationOrientation * controller.Orientation;

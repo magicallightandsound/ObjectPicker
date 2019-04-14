@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -33,19 +33,19 @@ namespace MagicLeap
 
         #region Private Variables
         [SerializeField, Tooltip("The headpose canvas for example status text.")]
-        private Text _statusLabel;
+        private Text _statusLabel = null;
 
         [SerializeField, Tooltip("Raycast from controller.")]
-        private WorldRaycastController _raycastController;
+        private WorldRaycastController _raycastController = null;
 
         [SerializeField, Tooltip("Raycast from headpose.")]
-        private WorldRaycastHead _raycastHead;
+        private WorldRaycastHead _raycastHead = null;
 
         [SerializeField, Tooltip("Raycast from eyegaze.")]
-        private WorldRaycastEyes _raycastEyes;
+        private WorldRaycastEyes _raycastEyes = null;
 
         [Space, SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         private RaycastMode _raycastMode = RaycastMode.Controller;
         private int _modeCount = System.Enum.GetNames(typeof(RaycastMode)).Length;

@@ -17,4 +17,7 @@ After an image is recognized, tracking can be maintained at longer distances
 (about 1.5 meters) and higher angles of incidence up to around 70 degrees.
 
 ## Bumper
-Cycle through the different visualizers: box, axis, demo, all.
+Cycle through the different visualizers: TrackingCubeOnly, AxisOnly, DemoOnly, All.
+
+## Trigger
+Enables and disables MLImageTracker API.

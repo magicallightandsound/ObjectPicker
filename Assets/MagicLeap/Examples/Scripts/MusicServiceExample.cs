@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -39,51 +39,57 @@ namespace MagicLeap
 
         #region Private Variables
         private const float SEEK_EPSILON = 0.001f;
+        private uint _trackLengthMS = 0;
+        private uint _trackHeadPositionMS = 0;
 
         [SerializeField, Tooltip("Play Material")]
-        private Material _playMaterial;
+        private Material _playMaterial = null;
         [SerializeField, Tooltip("Pause Material")]
-        private Material _pauseMaterial;
-        [SerializeField, Tooltip("Stop Material")]
-        private Material _stopMaterial;
+        private Material _pauseMaterial = null;
         [SerializeField, Tooltip("Shuffle On Material")]
-        private Material _shuffleOnMaterial;
+        private Material _shuffleOnMaterial = null;
         [SerializeField, Tooltip("Shuffle Off Material")]
-        private Material _shuffleOffMaterial;
+        private Material _shuffleOffMaterial = null;
         [SerializeField, Tooltip("Repeat Off Material")]
-        private Material _repeatOffMaterial;
+        private Material _repeatOffMaterial = null;
         [SerializeField, Tooltip("Repeat On Song Material")]
-        private Material _repeatSongMaterial;
+        private Material _repeatSongMaterial = null;
         [SerializeField, Tooltip("Repeat On Album Material")]
-        private Material _repeatAlbumMaterial;
+        private Material _repeatAlbumMaterial = null;
 
         [SerializeField, Tooltip("PlaybackBar reference.")]
-        private MediaPlayerSlider _playbackBar;
+        private MediaPlayerSlider _playbackBar = null;
 
         [SerializeField, Tooltip("Volume bar reference.")]
-        private MediaPlayerSlider _volumeBar;
+        private MediaPlayerSlider _volumeBar = null;
 
         [SerializeField, Tooltip("Play button reference.")]
-        private MediaPlayerToggle _playButton;
+        private MediaPlayerToggle _playButton = null;
 
         [SerializeField, Tooltip("Next button reference.")]
-        private MediaPlayerButton _nextButton;
+        private MediaPlayerButton _nextButton = null;
 
         [SerializeField, Tooltip("Previous button reference.")]
-        private MediaPlayerButton _prevButton;
+        private MediaPlayerButton _prevButton = null;
         [SerializeField, Tooltip("Shuffle button reference.")]
-        private MediaPlayerToggle _shuffleButton;
+        private MediaPlayerToggle _shuffleButton = null;
         [SerializeField, Tooltip("Repeat button reference.")]
-        private MediaPlayerButton _repeatButton;
+        private MediaPlayerButton _repeatButton = null;
 
         [SerializeField, Tooltip("ElapsedTime reference.")]
-        private TextMesh _elapsedTime;
+        private TextMesh _elapsedTime = null;
 
         [SerializeField, Tooltip("Metadata display reference.")]
-        private TextMesh _metadataDisplay;
+        private TextMesh _metadataDisplay = null;
+
+        [SerializeField, Tooltip("Metadata display for the previous track title.")]
+        private TextMesh _metadataPreviousTrack = null;
+
+        [SerializeField, Tooltip("Metadata display for the next track title.")]
+        private TextMesh _metadataNextTrack = null;
 
         [SerializeField, Tooltip("Status text display reference.")]
-        private TextMesh _statusDisplay;
+        private TextMesh _statusDisplay = null;
         #endregion //Private Variables
 
         #region Unity Methods
@@ -114,6 +120,11 @@ namespace MagicLeap
             MLResult result = MLMusicService.Start(MusicServiceProvider);
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: MusicServiceExample failed starting MLMusicService, disabling script. Reason: {0}", result);
                 enabled = false;
                 return;
@@ -134,8 +145,6 @@ namespace MagicLeap
             _shuffleButton.OnToggle += ToggleShuffle;
             _repeatButton.OnControllerTriggerDown += ChangeRepeatState;
 
-            // Sync the UI with the provider
-            _volumeBar.Value = 1.0f;
             MLMusicService.RepeatState = MLMusicServiceRepeatState.Off;
             MLMusicService.ShuffleState = MLMusicServiceShuffleState.Off;
 
@@ -178,6 +187,11 @@ namespace MagicLeap
                 MLResult result = pause ? MLMusicService.PausePlayback() : MLMusicService.ResumePlayback();
                 if (!result.IsOk)
                 {
+                    if (result.Code == MLResultCode.PrivilegeDenied)
+                    {
+                        Instantiate(Resources.Load("PrivilegeDeniedError"));
+                    }
+
                     Debug.LogErrorFormat("MusicServiceExample failed to {0} the current track, disabling script. Reason: {1}.", pause ? "pause" : "resume", result);
                     enabled = false;
                     return;
@@ -253,12 +267,6 @@ namespace MagicLeap
                 enabled = false;
                 return false;
             }
-            if (_stopMaterial == null)
-            {
-                Debug.LogError("Error: MusicServiceExample._stopMaterial is not set, disabling script.");
-                enabled = false;
-                return false;
-            }
             if (_shuffleOnMaterial == null)
             {
                 Debug.LogError("Error: MusicServiceExample._shuffleOnMaterial is not set, disabling script.");
@@ -305,11 +313,9 @@ namespace MagicLeap
         /// <param name="sliderValue">The new value of the seek bar in range [0, 1]</param>
         private void Seek(float sliderValue)
         {
-            uint lengthMS = MLMusicService.TrackLength * 1000;
-            uint targetMS = (uint)(lengthMS * sliderValue);
+            uint targetMS = (uint)(_trackLengthMS * sliderValue);
 
-            uint current = MLMusicService.CurrentPosition;
-            float currentValue = (float)current / (float)lengthMS;
+            float currentValue = _trackHeadPositionMS / (float)_trackLengthMS;
             if (Math.Abs(currentValue - sliderValue) < SEEK_EPSILON)
             {
                 return;
@@ -337,9 +343,16 @@ namespace MagicLeap
             {
                 MLMusicService.PausePlayback();
             }
-            else if (shouldPlay && MLMusicService.PlaybackState != MLMusicServicePlaybackState.Playing)
+            else if (shouldPlay)
             {
-                MLMusicService.ResumePlayback();
+                if (MLMusicService.PlaybackState == MLMusicServicePlaybackState.Paused)
+                {
+                    MLMusicService.ResumePlayback();
+                }
+                else if (MLMusicService.PlaybackState == MLMusicServicePlaybackState.Stopped)
+                {
+                    MLMusicService.StartPlayback();
+                }
             }
         }
 
@@ -421,15 +434,14 @@ namespace MagicLeap
         {
             if (state == MLMusicServicePlaybackState.Playing)
             {
-                _playButton.Material = _playMaterial;
-            }
-            else if (state == MLMusicServicePlaybackState.Paused)
-            {
                 _playButton.Material = _pauseMaterial;
+                _playButton.State = true;
             }
-            else if (state == MLMusicServicePlaybackState.Stopped)
+            else if (state == MLMusicServicePlaybackState.Paused ||
+                state == MLMusicServicePlaybackState.Stopped)
             {
-                _playButton.Material = _stopMaterial;
+                _playButton.Material = _playMaterial;
+                _playButton.State = false;
             }
             Debug.LogFormat("Playback State Changed {0}", state);
         }
@@ -465,6 +477,8 @@ namespace MagicLeap
                         metaData.TrackTitle, metaData.AlbumInfoName, metaData.AlbumInfoUrl, metaData.AlbumInfoCoverUrl,
                         metaData.ArtistInfoName, metaData.ArtistInfoUrl);
 
+            _trackLengthMS = MLMusicService.TrackLength;
+
             Debug.LogFormat("Metadata Changed\n" +
                             "Track Title: {0}\n" +
                             "Album Name: {1}\n" +
@@ -472,10 +486,19 @@ namespace MagicLeap
                             "Album Cover URL: {3}\n" +
                             "Artist Name: {4}\n" +
                             "Artist URL: {5}\n" +
-                            "Length: {6}\n" +
-                            "Position: {7}\n",
+                            "Length: {6}\n",
                             metaData.TrackTitle, metaData.AlbumInfoName, metaData.AlbumInfoUrl, metaData.AlbumInfoCoverUrl,
-                            metaData.ArtistInfoName, metaData.ArtistInfoUrl, metaData.Length, metaData.Position);
+                            metaData.ArtistInfoName, metaData.ArtistInfoUrl, metaData.Length);
+
+            MLMusicServiceMetadata trackMeta = new MLMusicServiceMetadata();
+
+            // Retrieve the meta information for the previous track.
+            MLMusicService.GetMetadata(MLMusicServiceTrackType.Previous, ref trackMeta);
+            _metadataPreviousTrack.text = string.Format("Previous: {0}", trackMeta.TrackTitle);
+
+            // Retrieve the meta information for the next track.
+            MLMusicService.GetMetadata(MLMusicServiceTrackType.Next, ref trackMeta);
+            _metadataNextTrack.text = string.Format("Next: {0}", trackMeta.TrackTitle);
         }
 
         /// <summary>
@@ -485,15 +508,16 @@ namespace MagicLeap
         /// <param name="userData">Extra user provided data, if passed into MLMusicService.Start</param>
         void HandlePositionChanged(int newPosition, IntPtr userData)
         {
-            uint lengthMS = MLMusicService.TrackLength * 1000;
-            if (lengthMS == 0)
+            if (_trackLengthMS == 0)
             {
-                lengthMS = 1;
+                // something went wrong
+                return;
             }
 
+            _trackHeadPositionMS = (uint)newPosition;
             if (_playbackBar != null)
             {
-                float barValue = (float)newPosition / (float)lengthMS;
+                float barValue = (float)newPosition / (float)_trackLengthMS;
                 _playbackBar.Value = barValue;
             }
 
@@ -503,7 +527,6 @@ namespace MagicLeap
                 _elapsedTime.text = String.Format("{0}:{1}:{2}",
                     timeSpan.Hours.ToString(), timeSpan.Minutes.ToString("00"), timeSpan.Seconds.ToString("00"));
             }
-
         }
 
         /// <summary>

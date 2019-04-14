@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -28,32 +28,29 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Content to create")]
-        GameObject _content;
+        GameObject _content = null;
         List<MLPersistentBehavior> _pointBehaviors = new List<MLPersistentBehavior>();
 
         [SerializeField, Tooltip("Status Text")]
-        Text _statusText;
+        Text _statusText = null;
 
         [SerializeField, Tooltip("Destroyed content effect")]
-        GameObject _destroyedContentEffect;
+        GameObject _destroyedContentEffect = null;
 
         [SerializeField, Tooltip("Text to count restored objects")]
-        Text _countRestoredText;
+        Text _countRestoredText = null;
         string _countRestoredTextFormat;
         int _countRestoredGood = 0;
         int _countRestoredBad = 0;
 
         [SerializeField, Tooltip("Text to count created objects")]
-        Text _countCreatedText;
+        Text _countCreatedText = null;
         string _countCreatedTextFormat;
         int _countCreatedGood = 0;
         int _countCreatedBad = 0;
 
-        [SerializeField, Tooltip("Visualizers to enable when the privilege is granted")]
-        GameObject[] _visualizers;
-
         [SerializeField, Tooltip("Controller")]
-        ControllerConnectionHandler _controller;
+        ControllerConnectionHandler _controller = null;
 
         [SerializeField, Tooltip("Distance in front of Controller to create content")]
         float _distance = 0.2f;
@@ -61,7 +58,7 @@ namespace MagicLeap
         PrivilegeRequester _privilegeRequester;
 
         [SerializeField, Tooltip("PCF Visualizer when debugging")]
-        PCFVisualizer _pcfVisualizer;
+        PCFVisualizer _pcfVisualizer = null;
         #endregion // Private Variables
 
         #region Unity Methods
@@ -121,8 +118,6 @@ namespace MagicLeap
             _privilegeRequester = GetComponent<PrivilegeRequester>();
             _privilegeRequester.OnPrivilegesDone += HandlePrivilegesDone;
             _statusText.text = "Status: Requesting Privileges";
-
-            MLInput.OnControllerButtonDown += HandleControllerButtonDown;
         }
 
         /// <summary>
@@ -139,7 +134,6 @@ namespace MagicLeap
                 }
             }
 
-            MLPersistentCoordinateFrames.OnReady -= HandleReady;
             if (MLPersistentCoordinateFrames.IsStarted)
             {
                 MLPersistentCoordinateFrames.Stop();
@@ -161,11 +155,11 @@ namespace MagicLeap
 
         #region Event Handlers
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="controllerId"></param>
         /// <param name="button"></param>
-        private void HandleControllerButtonDown(byte controllerId, MLInputControllerButton button)
+        void HandleControllerButtonDown(byte controllerId, MLInputControllerButton button)
         {
             if (!_controller.IsControllerValid(controllerId))
             {
@@ -192,6 +186,11 @@ namespace MagicLeap
             _privilegeRequester.OnPrivilegesDone -= HandlePrivilegesDone;
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: PersistenceExample failed to get requested privileges, disabling script. Reason: {0}", result);
                 _statusText.text = "<color=red>Failed to acquire necessary privileges</color>";
                 enabled = false;
@@ -202,6 +201,11 @@ namespace MagicLeap
             result = MLPersistentStore.Start();
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: PersistenceExample failed starting MLPersistentStore, disabling script. Reason: {0}", result);
                 enabled = false;
                 return;
@@ -210,6 +214,11 @@ namespace MagicLeap
             result = MLPersistentCoordinateFrames.Start();
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 MLPersistentStore.Stop();
                 Debug.LogErrorFormat("Error: PersistenceExample failed starting MLPersistentCoordinateFrames, disabling script. Reason: {0}", result);
                 enabled = false;
@@ -218,25 +227,31 @@ namespace MagicLeap
 
             if (MLPersistentCoordinateFrames.IsReady)
             {
-                HandleReady();
+                PerformStartup();
             }
             else
             {
-                MLPersistentCoordinateFrames.OnReady += HandleReady;
+                MLPersistentCoordinateFrames.OnInitialized += HandleInitialized;
             }
         }
 
         /// <summary>
-        /// Starts the restoration process after the basic systems are initialized.
+        /// Proceeds with further start up operations if the system successfully initialized.
         /// </summary>
-        void HandleReady()
+        void HandleInitialized(MLResult status)
         {
-            MLPersistentCoordinateFrames.OnReady -= HandleReady;
+            MLPersistentCoordinateFrames.OnInitialized -= HandleInitialized;
 
-            _pcfVisualizer.gameObject.SetActive(true);
-            _statusText.text = "Status: Restoring Content";
-            ReadAllStoredObjects();
-            _statusText.text = "";
+            if (status.IsOk)
+            {
+                PerformStartup();
+            }
+            else
+            {
+                _statusText.text = string.Format("<color=red>{0}</color>", status);
+                Debug.LogErrorFormat("Error: MLPersistentCoordinateFrames failed to initialize, disabling script. Reason: {0}", status);
+                enabled = false;
+            }
         }
 
         /// <summary>
@@ -265,9 +280,9 @@ namespace MagicLeap
                     _countRestoredBad++;
                     UpdateRestoredCountText();
 
-                    // MLSnapshotResult.PoseNotFound means the content is bound to a PCF
+                    // MLResultCode.SnapshotPoseNotFound means the content is bound to a PCF
                     // that does not belong to the current map which is normal behavior
-                    if ((MLSnapshotResult)result.Code != MLSnapshotResult.PoseNotFound)
+                    if (result.Code != MLResultCode.SnapshotPoseNotFound)
                     {
                         ShowError(result);
                     }
@@ -279,6 +294,18 @@ namespace MagicLeap
         #endregion // Event Handlers
 
         #region Private Methods
+        /// <summary>
+        /// Activate PCF Visualizer, restore content, and update status text
+        /// </summary>
+        void PerformStartup()
+        {
+            MLInput.OnControllerButtonDown += HandleControllerButtonDown;
+            _pcfVisualizer.gameObject.SetActive(true);
+            _statusText.text = "Status: Restoring Content";
+            ReadAllStoredObjects();
+            _statusText.text = "";
+        }
+
         /// <summary>
         /// Update counter for restored content
         /// </summary>
@@ -328,8 +355,8 @@ namespace MagicLeap
         void CreateContent(Vector3 position, Quaternion rotation)
         {
             GameObject gameObj = Instantiate(_content, position, rotation);
-            gameObj.name = Guid.NewGuid().ToString();
             MLPersistentBehavior persistentBehavior = gameObj.GetComponent<MLPersistentBehavior>();
+            persistentBehavior.UniqueId = Guid.NewGuid().ToString();
             _pointBehaviors.Add(persistentBehavior);
             AddContentListeners(persistentBehavior);
         }

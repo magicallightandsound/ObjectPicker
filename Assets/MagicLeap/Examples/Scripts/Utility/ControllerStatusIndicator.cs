@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -11,7 +11,6 @@
 // %BANNER_END%
 
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap
@@ -27,13 +26,13 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Controller Icon")]
-        private Sprite _controllerIcon;
+        private Sprite _controllerIcon = null;
 
         [SerializeField, Tooltip("Mobile App Icon")]
-        private Sprite _mobileAppIcon;
+        private Sprite _mobileAppIcon = null;
 
         [SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         private SpriteRenderer _spriteRenderer;
         #endregion
@@ -65,14 +64,39 @@ namespace MagicLeap
                 return;
             }
 
-            _controllerConnectionHandler.OnControllerConnected += HandleOnControllerConnected;
+            _controllerConnectionHandler.OnControllerConnected += HandleOnControllerChanged;
+            _controllerConnectionHandler.OnControllerDisconnected += HandleOnControllerChanged;
+        }
+
+        void Start()
+        {
+            SetDefaultIcon();
+
+            UpdateColor();
             UpdateIcon();
         }
 
+        void OnDestroy()
+        {
+            _controllerConnectionHandler.OnControllerConnected -= HandleOnControllerChanged;
+            _controllerConnectionHandler.OnControllerDisconnected -= HandleOnControllerChanged;
+        }
+
+        void OnApplicationPause(bool pause)
+        {
+            if (!pause)
+            {
+                UpdateColor();
+                UpdateIcon();
+            }
+        }
+        #endregion
+
+        #region Private Methods
         /// <summary>
-        /// Set the color of the sprite renderer based on the controller class connectivity status.
+        /// Update the color depending on the controller connection.
         /// </summary>
-        void Update()
+        private void UpdateColor()
         {
             if (_controllerConnectionHandler.enabled)
             {
@@ -92,44 +116,51 @@ namespace MagicLeap
         }
 
         /// <summary>
-        /// Cleans up the component.
-        /// </summary>
-        void OnDestroy()
-        {
-            _controllerConnectionHandler.OnControllerConnected -= HandleOnControllerConnected;
-        }
-        #endregion
-
-        #region Private Methods
-        /// <summary>
-        /// Update the icon depending on the controller connected
+        /// Update Icon to show type of connected icon or device allowed.
         /// </summary>
         private void UpdateIcon()
         {
-            if (_controllerConnectionHandler.IsControllerValid())
+            if (_controllerConnectionHandler.enabled &&
+                _controllerConnectionHandler.IsControllerValid())
             {
                 switch (_controllerConnectionHandler.ConnectedController.Type)
                 {
                     case MLInputControllerType.Control:
-                        _spriteRenderer.sprite = _controllerIcon;
-                        break;
+                        {
+                            _spriteRenderer.sprite = _controllerIcon;
+                            break;
+                        }
                     case MLInputControllerType.MobileApp:
-                        _spriteRenderer.sprite = _mobileAppIcon;
-                        break;
+                        {
+                            _spriteRenderer.sprite = _mobileAppIcon;
+                            break;
+                        }
                 }
+            }
+        }
+
+        /// <summary>
+        /// This will set the default icon used to represent the controller.
+        /// When the device controller is excluded, MobileApp will be used instead.
+        /// </summary>
+        private void SetDefaultIcon()
+        {
+            if ((_controllerConnectionHandler.DevicesAllowed & ControllerConnectionHandler.DeviceTypesAllowed.ControllerLeft) != 0 ||
+                (_controllerConnectionHandler.DevicesAllowed & ControllerConnectionHandler.DeviceTypesAllowed.ControllerRight) != 0)
+            {
+                _spriteRenderer.sprite = _controllerIcon;
+            }
+            else
+            {
+                _spriteRenderer.sprite = _mobileAppIcon;
             }
         }
         #endregion
 
         #region Event Handlers
-        /// <summary>
-        /// Handles the event for controller connected.
-        /// Assign controller to connected controller if desired hand matches
-        /// with new connected controller.
-        /// </summary>
-        /// <param name="controller">(Unused) New valid controller</param>
-        protected void HandleOnControllerConnected(MLInputController controller)
+        private void HandleOnControllerChanged(byte controllerId)
         {
+            UpdateColor();
             UpdateIcon();
         }
         #endregion

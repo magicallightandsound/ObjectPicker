@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -10,13 +10,10 @@
 // ---------------------------------------------------------------------
 // %BANNER_END%
 
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.XR.MagicLeap;
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.MagicLeap;
 
 namespace MagicLeap
 {
@@ -30,49 +27,49 @@ namespace MagicLeap
         private const float UI_UPDATE_INTERVAL = 0.1f; //seconds
 
         [SerializeField, Tooltip("MeshRenderer to display media")]
-        private MeshRenderer _screen;
+        private MeshRenderer _screen = null;
 
         [SerializeField, Tooltip("Pause/Play Button")]
-        private MediaPlayerToggle _pausePlayButton;
+        private MediaPlayerToggle _pausePlayButton = null;
 
         [SerializeField, Tooltip("Play Material")]
-        private Material _playMaterial;
+        private Material _playMaterial = null;
         [SerializeField, Tooltip("Pause Material")]
-        private Material _pauseMaterial;
+        private Material _pauseMaterial = null;
 
         [SerializeField, Tooltip("Rewind Button")]
-        private MediaPlayerButton _rewindButton;
+        private MediaPlayerButton _rewindButton = null;
 
         [SerializeField, Tooltip("Number of ms to rewind")]
         private int _rewindMS = -10000;
 
         [SerializeField, Tooltip("Forward Button")]
-        private MediaPlayerButton _forwardButton;
+        private MediaPlayerButton _forwardButton = null;
 
         [SerializeField, Tooltip("Number of ms to forward")]
         private int _forwardMS = 10000;
 
         [SerializeField, Tooltip("Timeline Slider")]
-        private MediaPlayerSlider _timelineSlider;
+        private MediaPlayerSlider _timelineSlider = null;
 
         [SerializeField, Tooltip("Buffer Bar")]
-        private Transform _bufferBar;
+        private Transform _bufferBar = null;
 
         [SerializeField, Tooltip("Volume Slider")]
-        private MediaPlayerSlider _volumeSlider;
+        private MediaPlayerSlider _volumeSlider = null;
 
         [SerializeField, Tooltip("Text Mesh for Elapsed Time")]
-        private TextMesh _elapsedTime;
+        private TextMesh _elapsedTime = null;
 
         // For online videos, web URLs are accepted
         // For local videos, the asset should be placed in Assets/StreamingAssets/
         //   and the url should be relative to Assets/StreamingAssets/
         [SerializeField, Tooltip("URL of Video to be played")]
-        private string _url;
+        private string _url = String.Empty;
 
         // DRM-free videos should leave this blank
         [SerializeField, Tooltip("Optional URL of DRM video license server")]
-        private string _licenseUrl;
+        private string _licenseUrl = String.Empty;
 
         // Private class used to facilitate "Dictionary" inspector, since Unity can't inspect Dictionaries
         [System.Serializable]
@@ -83,14 +80,17 @@ namespace MagicLeap
         }
         // DRM-free videos should leave this blank
         [SerializeField, Tooltip("Optional DRM license server header parameters")]
-        private StringKeyValue[] _customLicenseHeaderData;
+        private StringKeyValue[] _customLicenseHeaderData = null;
 
         [SerializeField, Tooltip("Status Text (can be empty)")]
-        private TextMesh _statusText;
+        private TextMesh _statusText = null;
 
-        private MLMediaPlayer _mediaPlayer;
-        private Button _lastButtonHit;
+        [SerializeField, Tooltip("Instance of Spinner")]
+        private GameObject _spinner = null;
+
+        private MLMediaPlayer _mediaPlayer = null;
         private bool _isSeeking = false;
+        private bool _isBuffering = false;
         private float _UIUpdateTimer;
         #endregion // Private Variables
 
@@ -157,6 +157,12 @@ namespace MagicLeap
                 enabled = false;
                 return;
             }
+            if (_spinner == null)
+            {
+                Debug.LogError("Error: MediaPlayerExample._spinner is not set, disabling script.");
+                enabled = false;
+                return;
+            }
 
             _mediaPlayer = _screen.gameObject.AddComponent<MLMediaPlayer>();
 
@@ -167,7 +173,7 @@ namespace MagicLeap
             _mediaPlayer.OnSeekStarted += HandleSeekStarted;
             _mediaPlayer.OnSeekCompleted += HandleSeekCompleted;
             _mediaPlayer.OnBufferingUpdate += HandleBufferUpdate;
-            _mediaPlayer.OnError += HandleError;
+            _mediaPlayer.OnMediaError += HandleError;
             _mediaPlayer.OnInfo += HandleInfo;
             _mediaPlayer.OnVideoPrepared += HandleVideoPrepared;
 
@@ -198,6 +204,11 @@ namespace MagicLeap
             MLResult result = _mediaPlayer.PrepareVideo();
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 _statusText.text = result.ToString();
             }
 
@@ -214,7 +225,7 @@ namespace MagicLeap
             _mediaPlayer.OnSeekStarted -= HandleSeekStarted;
             _mediaPlayer.OnSeekCompleted -= HandleSeekCompleted;
             _mediaPlayer.OnBufferingUpdate -= HandleBufferUpdate;
-            _mediaPlayer.OnError -= HandleError;
+            _mediaPlayer.OnMediaError -= HandleError;
             _mediaPlayer.OnInfo -= HandleInfo;
             _mediaPlayer.OnVideoPrepared -= HandleVideoPrepared;
 
@@ -258,6 +269,9 @@ namespace MagicLeap
         /// <param name="enabled">True if the UI should be enabled, false if disabled</param>
         private void EnableUI(bool enabled)
         {
+            // show the spinner when UI is disabled and vice versa
+            _spinner.SetActive(!enabled);
+
             _forwardButton.enabled = enabled;
             _pausePlayButton.enabled = enabled;
             _rewindButton.enabled = enabled;
@@ -314,10 +328,8 @@ namespace MagicLeap
         private void HandleSeekStarted(float percent)
         {
             int lastTimeSoughtMs = Mathf.RoundToInt(percent * _mediaPlayer.GetDurationMs());
+            EnableUI(false);
             _isSeeking = true;
-            _rewindButton.enabled = false;
-            _forwardButton.enabled = false;
-            _timelineSlider.enabled = false;
             _timelineSlider.Value = percent;
             UpdateElapsedTime(lastTimeSoughtMs);
         }
@@ -331,9 +343,7 @@ namespace MagicLeap
         /// <param name="percent">Percent of whole duration (0.0f to 1.0f)</param>
         private void HandleSeekCompleted(float percent)
         {
-            _rewindButton.enabled = true;
-            _forwardButton.enabled = true;
-            _timelineSlider.enabled = true;
+            EnableUI(!_isBuffering);
             _isSeeking = false;
         }
 
@@ -351,9 +361,9 @@ namespace MagicLeap
         /// <summary>
         /// Event Handler when an error occurs
         /// </summary>
-        /// <param name="error">The MLMediaPlayerResult</param>
+        /// <param name="error">The MLResultCode</param>
         /// <param name="errorString">String version of the error</param>
-        private void HandleError(MLMediaPlayerResult error, string errorString)
+        private void HandleError(MLResultCode error, string errorString)
         {
             if (_statusText != null)
             {
@@ -368,10 +378,20 @@ namespace MagicLeap
         /// <param name="extra">The data associated with the event (if any), otherwise, 0</param>
         private void HandleInfo(MLMediaPlayerInfo info, int extra)
         {
-            if (info == MLMediaPlayerInfo.NetworkBandwidth)
+            switch (info)
             {
-                // source media is not local
-                // the parameter extra would contain bandwidth in kbps
+                case MLMediaPlayerInfo.NetworkBandwidth:
+                    // source media is not local
+                    // the parameter extra would contain bandwidth in kbps
+                    break;
+                case MLMediaPlayerInfo.BufferingStart:
+                    _isBuffering = true;
+                    EnableUI(false);
+                    break;
+                case MLMediaPlayerInfo.BufferingEnd:
+                    _isBuffering = false;
+                    EnableUI(true);
+                    break;
             }
         }
 

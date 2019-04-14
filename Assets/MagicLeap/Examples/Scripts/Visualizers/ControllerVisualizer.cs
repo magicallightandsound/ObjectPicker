@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -34,37 +34,37 @@ namespace MagicLeap
 
         #region Private Variables
         [SerializeField, Tooltip("The controller model.")]
-        private GameObject _controllerModel;
+        private GameObject _controllerModel = null;
 
         [Header("Controller Parts"), Space]
         [SerializeField, Tooltip("The controller's trigger model.")]
-        private GameObject _trigger;
+        private GameObject _trigger = null;
 
         [SerializeField, Tooltip("The controller's touchpad model.")]
-        private GameObject _touchpad;
+        private GameObject _touchpad = null;
 
         [SerializeField, Tooltip("The controller's home button model.")]
-        private GameObject _homeButton;
+        private GameObject _homeButton = null;
 
         [SerializeField, Tooltip("The controller's bumper button model.")]
-        private GameObject _bumperButton;
+        private GameObject _bumperButton = null;
 
         [SerializeField, Tooltip("The Game Object showing the touch model on the touchpad")]
-        private Transform _touchIndicatorTransform;
+        private Transform _touchIndicatorTransform = null;
 
         // Color when the button state is idle.
         private Color _defaultColor = Color.white;
         // Color when the button state is active.
         private Color _activeColor = Color.grey;
 
-        private Material _touchpadMaterial;
-        private Material _triggerMaterial;
-        private Material _homeButtonMaterial;
-        private Material _bumperButtonMaterial;
+        private Material _touchpadMaterial = null;
+        private Material _triggerMaterial = null;
+        private Material _homeButtonMaterial = null;
+        private Material _bumperButtonMaterial = null;
 
         private float _touchpadRadius;
 
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
         private bool _wasControllerValid = true;
 
         private const float MAX_TRIGGER_ROTATION = 35.0f;
@@ -177,7 +177,7 @@ namespace MagicLeap
             MLInputController controller = _controllerConnectionHandler.ConnectedController;
             Vector3 updatePosition = new Vector3(controller.Touch1PosAndForce.x, 0.0f, controller.Touch1PosAndForce.y);
             float touchY = _touchIndicatorTransform.localPosition.y;
-            _touchIndicatorTransform.localPosition = new Vector3(updatePosition.x * _touchpadRadius, touchY, updatePosition.z * _touchpadRadius);
+            _touchIndicatorTransform.localPosition = new Vector3(updatePosition.x * _touchpadRadius / MagicLeapDevice.WorldScale, touchY, updatePosition.z * _touchpadRadius / MagicLeapDevice.WorldScale);
 
             if (controller.Touch1Active)
             {

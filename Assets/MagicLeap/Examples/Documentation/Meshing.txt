@@ -18,6 +18,8 @@ interact with the meshing results. You can:
 Cycles rendering modes:
 - Wireframe. Wireframe mesh visualization from meshed results. Virtual objects
   are occluded.
+- PointCloud. Points mesh visualization from meshed results. No physics iteraction
+  between shot balls and mesh.
 - Occlusion. No visualization of mesh results.  Virtual objects are occluded.
 - None.
 

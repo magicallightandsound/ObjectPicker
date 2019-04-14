@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -27,9 +27,9 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
-        private Text _controllerStatsText;
+        private Text _controllerStatsText = null;
         #endregion
 
         #region Unity Methods
@@ -79,7 +79,7 @@ namespace MagicLeap
                         controller.UseCFUIDTransforms ? "Yes" : "No",
                         controller.IsCFUIDTrackingEnabled ? "Yes" : "No",
                         controller.TriggerValue.ToString("n2"),
-                        controller.State.ButtonState[(int)MLInputControllerButton.Bumper],
+                        controller.IsBumperDown,
                         controller.Touch1Active ? controller.Touch1PosAndForce.x.ToString("n2") : "0.00",
                         controller.Touch1Active ? controller.Touch1PosAndForce.y.ToString("n2") : "0.00",
                         controller.Touch1Active ? controller.Touch1PosAndForce.z.ToString("n2") : "0.00",
@@ -104,7 +104,7 @@ namespace MagicLeap
                         "No information available",
                         controller.Orientation.eulerAngles.ToString("n2"),
                         controller.TriggerValue.ToString("n2"),
-                        controller.State.ButtonState[(int)MLInputControllerButton.Bumper],
+                        controller.IsBumperDown,
                         controller.Touch1Active ? controller.Touch1PosAndForce.x.ToString("n2") : "0.00",
                         controller.Touch1Active ? controller.Touch1PosAndForce.y.ToString("n2") : "0.00",
                         controller.Touch2Active ? controller.Touch2PosAndForce.x.ToString("n2") : "0.00",

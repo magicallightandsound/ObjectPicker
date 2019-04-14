@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -34,16 +34,16 @@ namespace MagicLeap
 
         #region Private Variables
         [SerializeField, Tooltip("The MLSpatialMapper from which to get update on mesh types.")]
-        private MLSpatialMapper _mlSpatialMapper;
+        private MLSpatialMapper _mlSpatialMapper = null;
 
         [SerializeField, Tooltip("The material to apply for occlusion.")]
-        private Material _occlusionMaterial;
+        private Material _occlusionMaterial = null;
 
         [SerializeField, Tooltip("The material to apply for wireframe rendering.")]
-        private Material _wireframeMaterial;
+        private Material _wireframeMaterial = null;
 
         [SerializeField, Tooltip("The material to apply for point cloud rendering.")]
-        private Material _pointCloudMaterial;
+        private Material _pointCloudMaterial = null;
 
         private RenderMode _renderMode = RenderMode.Wireframe;
         #endregion
@@ -107,37 +107,31 @@ namespace MagicLeap
         /// <param name="mode">The render mode that should be used on the material.</param>
         public void SetRenderers(RenderMode mode)
         {
-            // Set the render mode.
-            _renderMode = mode;
-
-            // Clear existing meshes to process the new mesh type.
-            switch(_renderMode)
+            if (_renderMode != mode)
             {
-                case RenderMode.Wireframe:
-                case RenderMode.Occlusion:
+                // Set the render mode.
+                _renderMode = mode;
+
+                // Clear existing meshes to process the new mesh type.
+                switch (_renderMode)
                 {
-                    _mlSpatialMapper.DestroyAllMeshes();
-                    _mlSpatialMapper.RefreshAllMeshes();
+                    case RenderMode.Wireframe:
+                    case RenderMode.Occlusion:
+                    {
+                        _mlSpatialMapper.meshType = MLSpatialMapper.MeshType.Triangles;
 
-                    _mlSpatialMapper.meshType = MLSpatialMapper.MeshType.Triangles;
+                        break;
+                    }
+                    case RenderMode.PointCloud:
+                    {
+                        _mlSpatialMapper.meshType = MLSpatialMapper.MeshType.PointCloud;
 
-                    break;
+                        break;
+                    }
                 }
-                case RenderMode.PointCloud:
-                {
-                    _mlSpatialMapper.DestroyAllMeshes();
-                    _mlSpatialMapper.RefreshAllMeshes();
 
-                    _mlSpatialMapper.meshType = MLSpatialMapper.MeshType.PointCloud;
-
-                    break;
-                }
-            }
-
-            // Update the material applied to all the MeshRenderers.
-            foreach (GameObject fragment in _mlSpatialMapper.meshIdToGameObjectMap.Values)
-            {
-                UpdateRenderer(fragment.GetComponent<MeshRenderer>());
+                _mlSpatialMapper.DestroyAllMeshes();
+                _mlSpatialMapper.RefreshAllMeshes();
             }
         }
         #endregion

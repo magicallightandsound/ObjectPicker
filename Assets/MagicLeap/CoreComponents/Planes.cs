@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -51,10 +51,10 @@ namespace UnityEngine.XR.MagicLeap
         [Tooltip("Maximum number of planes to get at the same time.")]
         public uint MaxPlaneCount = 512;
 
-        [SerializeField, BitMask(typeof(SemanticFlags)), Space]
+        [SerializeField, MagicLeapBitMask(typeof(SemanticFlags)), Space]
         public SemanticFlags SemanticFlags;
 
-        [SerializeField, BitMask(typeof(OrientationFlags))]
+        [SerializeField, MagicLeapBitMask(typeof(OrientationFlags))]
         public OrientationFlags OrientationFlags;
 
         [Space, Tooltip("Minimum area of searched for planes.")]

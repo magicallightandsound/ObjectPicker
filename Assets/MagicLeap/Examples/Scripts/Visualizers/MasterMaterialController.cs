@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -23,16 +23,16 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Plane Visualizer")]
-        private PlaneVisualizer _visualizer;
+        private PlaneVisualizer _visualizer = null;
 
         [SerializeField, Tooltip("Status Text to show which object is currently being manipulated")]
-        private Text _statusText;
+        private Text _statusText = null;
 
         [Space, SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
-        private MaterialController [] _materialControllers;
-        private MaterialController _materialControllerInGaze;
+        private MaterialController [] _materialControllers = null;
+        private MaterialController _materialControllerInGaze = null;
 
         private uint swipeRight = 0;
         private uint swipeLeft = 0;

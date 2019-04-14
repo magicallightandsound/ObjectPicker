@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -19,20 +19,21 @@ namespace MagicLeap
     public class MediaPlayerSlider : MediaPlayerButton
     {
         #region Public Events
-        public System.Action<float> OnValueChanged;
+        public event System.Action<float> OnValueChanged;
         #endregion
 
         #region Private Variables
         [SerializeField, Tooltip("Local position of beginning point")]
-        private Vector3 _beginRelative;
+        private Vector3 _beginRelative = Vector3.zero;
 
         [SerializeField, Tooltip("Local position of ending point")]
-        private Vector3 _endRelative;
+        private Vector3 _endRelative = Vector3.zero;
 
         [SerializeField, Tooltip("Handle of the Slider")]
-        private Transform _handle;
+        private Transform _handle = null;
 
-        private float _value = 0;
+        [SerializeField, Tooltip("Initial value")]
+        private float _value = 0.0f;
         #endregion // Private Variables
 
         #region Public Properties
@@ -73,6 +74,8 @@ namespace MagicLeap
                 enabled = false;
                 return;
             }
+
+            _handle.localPosition = Vector3.Lerp(_beginRelative, _endRelative, _value);
         }
 
         protected override void OnEnable()

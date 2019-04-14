@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -29,19 +29,19 @@ namespace MagicLeap
         private bool _bounded = false;
 
         [SerializeField, Space, Tooltip("Wireframe cube to represent bounds.")]
-        private GameObject _boundsWireframeCube;
+        private GameObject _boundsWireframeCube = null;
 
         [SerializeField, Space, Tooltip("Text to display number of planes.")]
-        private Text _numberOfPlanesText;
+        private Text _numberOfPlanesText = null;
 
         [SerializeField, Tooltip("Text to display number of boundaries.")]
-        private Text _numberOfBoundariesText;
+        private Text _numberOfBoundariesText = null;
 
         [SerializeField, Tooltip("Text to display if planes extents are bounded or boundless.")]
-        private Text _boundedExtentsText;
+        private Text _boundedExtentsText = null;
 
         [Space, SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         private Planes _planesComponent;
 

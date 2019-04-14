@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -22,7 +22,7 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Foreground Color Palette")]
-        private Gradient _gradient;
+        private Gradient _gradient = null;
         private float _t = 0;
         #endregion
 

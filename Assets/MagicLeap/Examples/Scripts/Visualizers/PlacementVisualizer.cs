@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -21,31 +21,18 @@ namespace MagicLeap
     [RequireComponent(typeof(Placement))]
     public class PlacementVisualizer : MonoBehaviour
     {
+        #region Private Variables
         [SerializeField, Tooltip("A visual to be displayed when the volume will fit.  This transform's scale should be 1, 1, 1.")]
-        private GameObject _willFitVolume;
-
+        private GameObject _willFitVolume = null;
         [SerializeField, Tooltip("A visual to be displayed when the volume will not fit.  This transform's scale should be 1, 1, 1.")]
-        private GameObject _willNotFitVolume;
+        private GameObject _willNotFitVolume = null;
 
-        private Placement _placement;
+        private Placement _placement = null;
+        #endregion
 
         #region Unity Methods
         void Awake()
         {
-            if (_willFitVolume == null)
-            {
-                Debug.LogError("Error: PlacementVisualizer._willFitVolume is not set, disabling script.");
-                gameObject.SetActive(false);
-                return;
-            }
-
-            if (_willNotFitVolume == null)
-            {
-                Debug.LogError("Error: PlacementVisualizer._willNotFitVolume is not set, disabling script.");
-                gameObject.SetActive(false);
-                return;
-            }
-
             _placement = GetComponent<Placement>();
 
             // Hide the visuals.
@@ -53,12 +40,36 @@ namespace MagicLeap
             _willNotFitVolume.SetActive(false);
         }
 
+        private void OnEnable()
+        {
+            _placement.OnPlacementEvent += HandlePlacementEvent;
+            _placement.OnPlacementBegin += HandlePlacementBegin;
+        }
+
+        private void OnDisable()
+        {
+            _placement.OnPlacementEvent -= HandlePlacementEvent;
+            _placement.OnPlacementBegin -= HandlePlacementBegin;
+        }
+
         void Update()
+        {
+            // Position the volume visuals.
+            _willFitVolume.transform.SetPositionAndRotation(_placement.AdjustedPosition, _placement.Rotation);
+            _willNotFitVolume.transform.SetPositionAndRotation(_placement.AdjustedPosition, _placement.Rotation);
+        }
+        #endregion
+
+        #region Private Methods
+        private void HandlePlacementBegin(GameObject obj)
         {
             // Apply the volume scale.
             _willFitVolume.transform.localScale = _placement.Scale;
             _willNotFitVolume.transform.localScale = _placement.Scale;
+        }
 
+        private void HandlePlacementEvent(FitType newFit)
+        {
             if (_placement.Fit == FitType.Fits)
             {
                 _willFitVolume.SetActive(true);
@@ -69,34 +80,7 @@ namespace MagicLeap
                 _willFitVolume.SetActive(false);
                 _willNotFitVolume.SetActive(true);
             }
-
-            // Position the volume visuals.
-            if (_placement.Fit == FitType.NoSurface)
-            {
-                _willFitVolume.transform.position = _placement.Position;
-                _willNotFitVolume.transform.position = _placement.Position;
-                _willFitVolume.transform.rotation = _placement.Rotation;
-                _willNotFitVolume.transform.rotation = _placement.Rotation;
-            }
-            else
-            {
-                Vector3 finalLocation = Vector3.zero;
-                if (_placement.MatchGravityOnVerticals && _placement.Surface == UnityEngine.XR.MagicLeap.SurfaceType.Vertical)
-                {
-                    finalLocation = _placement.Position;
-                }
-                else
-                {
-                    finalLocation = _placement.Position + (_placement.YAxis * _placement.Scale.y * .5f);
-                }
-
-                _willFitVolume.transform.position = finalLocation;
-                _willNotFitVolume.transform.position = finalLocation;
-                _willFitVolume.transform.rotation = _placement.Rotation;
-                _willNotFitVolume.transform.rotation = _placement.Rotation;
-            }
         }
-
         #endregion
     }
 }

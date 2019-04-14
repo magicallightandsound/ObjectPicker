@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -22,17 +22,17 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Position offset of the explorer's target relative to Reference Transform")]
-        private Vector3 _positionOffset;
+        private Vector3 _positionOffset = Vector3.zero;
 
         [Header("Planet")]
         [SerializeField, Tooltip("Prefab of the Planet")]
-        private Animator _planetPrefabAnimator;
-        private Transform _planetInstance;
-        private Vector3 _planetVel;
+        private Animator _planetPrefabAnimator = null;
+        private Transform _planetInstance = null;
+        private Vector3 _planetVel = Vector3.zero;
 
         [Header("Explorer")]
         [SerializeField, Tooltip("Prefab of the Deep Space Explorer")]
-        private GameObject _explorerPrefab;
+        private GameObject _explorerPrefab = null;
 
         private float _timeLastLaunch = 0;
         [SerializeField, Tooltip("Time interval between instances (seconds)")]

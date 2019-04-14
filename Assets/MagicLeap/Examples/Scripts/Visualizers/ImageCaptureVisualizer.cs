@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -18,7 +18,7 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Object to set new images on.")]
-        private GameObject _previewObject;
+        private GameObject _previewObject = null;
         #endregion
 
         #region Event Handlers

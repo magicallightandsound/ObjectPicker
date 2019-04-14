@@ -8,4 +8,4 @@ We display cursors at the ray collision points by subscribing to the raycast
 event callback.
 
 ## Bumper
-Press the Bumper to cycle through the raycast modes: controller, head, eyes, and all.
+Press the Bumper to cycle through the raycast modes: controller, head and eyes.

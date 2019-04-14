@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -24,16 +24,16 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("The screen to show the video capture preview")]
-        private GameObject _screen;
-        private Renderer _screenRenderer;
-        private MLMediaPlayer _mediaPlayer;
+        private GameObject _screen = null;
+        private Renderer _screenRenderer = null;
+        private MLMediaPlayer _mediaPlayer = null;
 
         [Header("Visuals")]
         [SerializeField, Tooltip("Text to show instructions for capturing video")]
-        private UnityEngine.UI.Text _previewText;
+        private UnityEngine.UI.Text _previewText = null;
 
         [SerializeField, Tooltip("Object that will show up when recording")]
-        private GameObject _recordingIndicator;
+        private GameObject _recordingIndicator = null;
 
         // time delay between video preparation and enabling screen preview
         private const float SCREEN_PREVIEW_DELAY = 0.6f;

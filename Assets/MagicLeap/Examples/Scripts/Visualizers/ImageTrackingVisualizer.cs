@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -25,20 +25,21 @@ namespace MagicLeap
     public class ImageTrackingVisualizer : MonoBehaviour
     {
         #region Private Variables
-        private MLImageTrackerBehavior _trackerBehavior;
+        private MLImageTrackerBehavior _trackerBehavior = null;
         private bool _targetFound = false;
 
         [SerializeField, Tooltip("Text to update on ImageTracking changes.")]
-        private Text _statusLabel;
+        private Text _statusLabel = null;
         // Stores initial text
         private string _prefix;
+        private string _eventString;
 
         [SerializeField, Tooltip("Game Object showing the axis")]
-        private GameObject _axis;
+        private GameObject _axis = null;
         [SerializeField, Tooltip("Game Object showing the tracking cube")]
-        private GameObject _trackingCube;
+        private GameObject _trackingCube = null;
         [SerializeField, Tooltip("Game Object showing the demo")]
-        private GameObject _demo;
+        private GameObject _demo = null;
 
         private ImageTrackingExample.ViewMode _lastViewMode = ImageTrackingExample.ViewMode.All;
         #endregion
@@ -82,12 +83,17 @@ namespace MagicLeap
         {
             _prefix = _statusLabel.text;
             _statusLabel.text = _prefix + "Target Lost";
-
+            _eventString = "";
             _trackerBehavior = GetComponent<MLImageTrackerBehavior>();
             _trackerBehavior.OnTargetFound += OnTargetFound;
             _trackerBehavior.OnTargetLost += OnTargetLost;
 
             RefreshViewMode();
+        }
+
+        private void Update()
+        {
+            _statusLabel.text = String.Format("{0}[{1}/{2}] {3}", _prefix, _trackerBehavior.IsTracking, _trackerBehavior.TrackingStatus, _eventString);
         }
 
         /// <summary>
@@ -151,7 +157,7 @@ namespace MagicLeap
         /// <param name="isReliable"> Contains if image found is reliable </param>
         private void OnTargetFound(bool isReliable)
         {
-            _statusLabel.text = String.Format("{0}Target Found ({1})", _prefix, (isReliable ? "Reliable" : "Unreliable"));
+            _eventString = String.Format("Target Found ({0})", (isReliable ? "Reliable" : "Unreliable"));
             _targetFound = true;
             RefreshViewMode();
         }
@@ -161,7 +167,7 @@ namespace MagicLeap
         /// </summary>
         private void OnTargetLost()
         {
-            _statusLabel.text = String.Format("{0}Target Lost", _prefix);
+            _eventString = "Target Lost";
             _targetFound = false;
             RefreshViewMode();
         }

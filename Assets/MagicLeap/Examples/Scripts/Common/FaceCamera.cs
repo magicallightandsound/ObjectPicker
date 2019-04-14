@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -23,7 +23,7 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Rotation Offset in Euler Angles")]
-        Vector3 _rotationOffset;
+        Vector3 _rotationOffset = Vector3.zero;
         #endregion
 
         #region Unity Methods

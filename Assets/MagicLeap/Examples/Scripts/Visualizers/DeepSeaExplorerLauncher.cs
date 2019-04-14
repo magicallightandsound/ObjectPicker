@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -22,11 +22,11 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Position offset of the explorer's target relative to Reference Transform")]
-        private Vector3 _positionOffset;
+        private Vector3 _positionOffset = Vector3.zero;
 
         [SerializeField, Tooltip("Prefab of the Deep Sea Explorer")]
-        private GameObject _explorerPrefab;
-        private FaceTargetPosition[] _followers;
+        private GameObject _explorerPrefab = null;
+        private FaceTargetPosition[] _followers = null;
 
         [SerializeField, Tooltip("Desired number of explorers. Each explorer will have a different mass and turning speed combination")]
         private int _numExplorers = 3;

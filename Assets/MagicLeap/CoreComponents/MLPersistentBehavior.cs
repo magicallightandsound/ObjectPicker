@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -144,18 +144,18 @@ namespace UnityEngine.XR.MagicLeap
 
             if (MLPersistentCoordinateFrames.IsReady)
             {
-                HandleReady();
+                CreateOrRestoreBinding();
             }
             else
             {
-                MLPersistentCoordinateFrames.OnReady += HandleReady;
+                MLPersistentCoordinateFrames.OnInitialized += HandleInitialized;
             }
         }
 
         /// <summary>
         /// Clean Up
         /// </summary>
-        private void OnDestroy()
+        void OnDestroy()
         {
             if (MLPersistentStore.IsStarted)
             {
@@ -164,7 +164,6 @@ namespace UnityEngine.XR.MagicLeap
             if (MLPersistentCoordinateFrames.IsStarted)
             {
                 MLPersistentCoordinateFrames.Stop();
-                MLPersistentCoordinateFrames.OnReady -= HandleReady;
             }
 
             UnregisterPCFEventHandlers();
@@ -173,6 +172,22 @@ namespace UnityEngine.XR.MagicLeap
         #endregion // Unity Methods
 
         #region Private Methods
+        /// <summary>
+        /// Determine and perform the appropriate action
+        /// </summary>
+        void CreateOrRestoreBinding()
+        {
+            if (MLPersistentStore.Contains(UniqueId))
+            {
+                RestoreBinding();
+            }
+            else
+            {
+                // Find closest PCF and create binding to it
+                StartCoroutine(BindToClosestPCF());
+            }
+        }
+
         /// <summary>
         /// Tries to restore the binding
         /// </summary>
@@ -228,7 +243,7 @@ namespace UnityEngine.XR.MagicLeap
                 if (pcfPositionResult.IsOk && pcfWithPosition != null && pcfWithPosition.CurrentResult == MLResultCode.Ok)
                 {
                     Debug.Log("Binding to closest found PCF: " + pcfWithPosition.CFUID);
-                    Binding = MLContentBinder.BindToPCF(gameObject.name, gameObject, pcfWithPosition);
+                    Binding = MLContentBinder.BindToPCF(UniqueId, gameObject, pcfWithPosition);
                     MLPersistentStore.Save(Binding);
                     NotifyChangeOfStatus(Status.BINDING_CREATED, MLResult.ResultOk);
                     RegisterPCFEventHandlers();
@@ -346,7 +361,7 @@ namespace UnityEngine.XR.MagicLeap
                 {
                     string logMessage = string.Format("Failed to restore : {0} - {1}. Result code: {2}",
                         gameObject.name, contentBinding.PCF.CFUID, result);
-                    if ((MLSnapshotResult)result.Code == MLSnapshotResult.PoseNotFound)
+                    if (result.Code == MLResultCode.SnapshotPoseNotFound)
                     {
                         // Content is bound to a PCF in a different map
                         Debug.LogWarning(logMessage);
@@ -369,18 +384,18 @@ namespace UnityEngine.XR.MagicLeap
         /// <summary>
         /// Handler when MLPersistentCoordinateFrames becomes ready
         /// </summary>
-        private void HandleReady()
+        void HandleInitialized(MLResult status)
         {
-            MLPersistentCoordinateFrames.OnReady -= HandleReady;
+            MLPersistentCoordinateFrames.OnInitialized -= HandleInitialized;
 
-            if (MLPersistentStore.Contains(UniqueId))
+            if (status.IsOk)
             {
-                RestoreBinding();
+                CreateOrRestoreBinding();
             }
             else
             {
-                // Find closest PCF and create binding to that
-                StartCoroutine(BindToClosestPCF());
+                Debug.LogErrorFormat("Error: MLPersistentCoordinateFrames failed to initialize, disabling script. Reason: {0}", status);
+                enabled = false;
             }
         }
 
@@ -388,7 +403,7 @@ namespace UnityEngine.XR.MagicLeap
         /// Handler when PCF bound to is lost. It tries to look for reliable PCF to bind to. If no PCF
         /// is available, try again later.
         /// </summary>
-        private void HandlePCFLost()
+        void HandlePCFLost()
         {
             _searchForPCF = null;
             MLResult result = MLPersistentCoordinateFrames.FindClosestPCF(transform.position, (findResult, returnPCF) =>
@@ -423,7 +438,7 @@ namespace UnityEngine.XR.MagicLeap
         /// <summary>
         /// Handler when PCF bound to regains. Cancel any on-going search for another PCF.
         /// </summary>
-        private void HandlePCFRegain()
+        void HandlePCFRegain()
         {
             Debug.Log("PCF Regained: " + Binding.PCF.CFUID);
             if (_searchForPCF != null)
@@ -454,6 +469,8 @@ namespace UnityEngine.XR.MagicLeap
             if (transform.hasChanged)
             {
                 // Note: this does not change the PCF bound to
+                // Note 2: if the binding doesn't exist, it will be created
+
                 Binding.Update();
                 MLPersistentStore.Save(Binding);
                 transform.hasChanged = false;

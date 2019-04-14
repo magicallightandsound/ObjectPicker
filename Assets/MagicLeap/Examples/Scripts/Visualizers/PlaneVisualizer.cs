@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -136,17 +136,17 @@ namespace MagicLeap
 
         #region Private Members
         [Space, SerializeField, Tooltip("Text to display render mode.")]
-        private Text _renderModeText;
+        private Text _renderModeText = null;
 
-        private GameObject _planesParent;
-        private GameObject _boundariesParent;
+        private GameObject _planesParent = null;
+        private GameObject _boundariesParent = null;
 
         // List of all the planes being rendered.
-        private List<GameObject> _planeCache;
-        private List<uint> _planeFlags;
+        private List<GameObject> _planeCache = null;
+        private List<uint> _planeFlags = null;
 
         // List of all boundaries and holes being rendered.
-        private List<BoundariesCache> _boundariesCache;
+        private List<BoundariesCache> _boundariesCache = null;
         private RenderType _renderType = RenderType.Border;
         #endregion
 

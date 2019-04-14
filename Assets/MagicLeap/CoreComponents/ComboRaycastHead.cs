@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -21,7 +21,7 @@ namespace UnityEngine.XR.MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("The layer(s) that will be used for hit detection.")]
-        private LayerMask _hitLayerMask;
+        private LayerMask _hitLayerMask = new LayerMask();
 
         // Note: Generated mesh may include noise (bumps). This bias is meant to cover
         // the possible deltas between that and the perception stack results.

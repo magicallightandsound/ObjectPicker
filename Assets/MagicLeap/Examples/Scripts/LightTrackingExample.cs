@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -23,27 +23,31 @@ namespace MagicLeap
     /// of a plant model which react to the light intensity changes.
     /// The UI also displays the detected light intensity level indicated in the top right.
     /// </summary>
+
+    [RequireComponent(typeof(PrivilegeRequester))]
     public class LightTrackingExample : MonoBehaviour
     {
         #region Private Variables
         [SerializeField, Tooltip("The primary light that is used in the scene.")]
-        private Light _light;
+        private Light _light = null;
 
         [SerializeField, Tooltip("The image (filled) that is used to display the light intensity.")]
-        private Image _lightIntensity;
+        private Image _lightIntensity = null;
 
         [SerializeField, Tooltip("The model animator that will update based on the light intensity.")]
-        private Animator _animator;
+        private Animator _animator = null;
 
         [SerializeField, Tooltip("The cursor used to visualize the location of the plant.")]
-        private Transform _raycastCursor;
+        private Transform _raycastCursor = null;
 
         [SerializeField, Tooltip("The transform of the plant model used in the scene.")]
-        private Transform _plantModel;
+        private Transform _plantModel = null;
 
-        private Color _color;
+        private Color _color = Color.clear;
         private float _normalizedLuminance;
         private float _maxLuminance = 0;
+
+        private PrivilegeRequester _privilegeRequester = null;
         #endregion
 
         #region Unity Methods
@@ -84,18 +88,18 @@ namespace MagicLeap
                 return;
             }
 
-            MLResult result = MLLightingTracker.Start();
-            if (result.IsOk)
-            {
-                enabled = true;
-                RenderSettings.ambientLight = Color.black;
-            }
+            _privilegeRequester = GetComponent<PrivilegeRequester>();
 
+            // Register Listeners
+            // Before enabling the camera, the scene must wait until the privileges have been granted.
+            _privilegeRequester.OnPrivilegesDone += HandleOnPrivilegesDone;
             MLInput.OnControllerButtonDown += HandleOnButtonDown;
         }
 
         void OnDestroy()
         {
+            // Unregister Listeners
+            _privilegeRequester.OnPrivilegesDone -= HandleOnPrivilegesDone;
             MLInput.OnControllerButtonDown -= HandleOnButtonDown;
 
             if (MLLightingTracker.IsStarted)
@@ -139,6 +143,35 @@ namespace MagicLeap
         #endregion
 
         #region Event Handlers
+        /// <summary>
+        /// Responds to privilege requester result.
+        /// </summary>
+        /// <param name="result"/>
+        private void HandleOnPrivilegesDone(MLResult result)
+        {
+            if (!result.IsOk)
+            {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
+                Debug.LogErrorFormat("Error: LightTrackingExample failed to get all requested privileges, disabling script. Reason: {0}", result);
+                enabled = false;
+                return;
+            }
+
+            Debug.Log("Succeeded in requesting all privileges");
+
+            result = MLLightingTracker.Start();
+            if (!result.IsOk)
+            {
+                Debug.LogErrorFormat("Error: LightTrackingExample failed starting MLLightingTracker, disabling script. Reason: {0}", result);
+                enabled = false;
+                return;
+            }
+        }
+
         /// <summary>
         /// Toggles the placement of the plant model.
         /// </summary>

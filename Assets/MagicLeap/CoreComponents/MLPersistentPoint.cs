@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -18,7 +18,7 @@ namespace UnityEngine.XR.MagicLeap
     /// <summary>
     /// This is an obsolete component and will be removed in a future release. Please use MLPersistentBehavior.
     /// </summary>
-    [Obsolete("This component has been deprecated and is superseded with MLPersistentBehavior.")]
+    [Obsolete("This component is obsolete and is superseded with MLPersistentBehavior.", true)]
     public class MLPersistentPoint : MonoBehaviour
     {
         #region Public Variables

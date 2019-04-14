@@ -4,6 +4,4 @@ This example demonstrates the functionality of using the camera
 in the device to capture an image.
 
 ## Bumper
-- First Press: Capture an image and show preview on the UI
-- Second Press: Close image preview.
-- Repeat
+- Captures an image and displays a preview in the user interface.

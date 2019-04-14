@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -25,12 +25,13 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Prefab to represent a PCF visually")]
-        private GameObject _prefab;
+        private GameObject _prefab = null;
         private List<GameObject> _pcfObjs = new List<GameObject>();
 
-        [SerializeField, Tooltip("UI Text to show Good PCF Count")]
-        private Text _goodPCFCountText;
-        private uint _goodPCFCount = 0;
+        [SerializeField, Tooltip("UI Text to show PCF Stored Count")]
+        private Text _pcfCountText = null;
+        private uint _pcfCount = 0;
+        const string PCF_COUNT_TEXT_FORMAT = "PCF Count: {0}";
 
         private int _ongoingQueriesCount = 0;
         IEnumerator _findAllPCFs = null;
@@ -59,14 +60,13 @@ namespace MagicLeap
                 return;
             }
 
-            if (_goodPCFCountText == null)
+            if (_pcfCountText == null)
             {
-                Debug.LogError("Error: PCFVisualizer._goodPCFCountText is not set, disabling script.");
+                Debug.LogError("Error: PCFVisualizer._pcfCountText is not set, disabling script.");
                 enabled = false;
                 return;
             }
-            _goodPCFCountText.text = "PCFs Loaded: 0";
-            _goodPCFCountText.gameObject.SetActive(false);
+            _pcfCountText.gameObject.SetActive(false);
 
             MLResult result = MLPersistentStore.Start();
             if (!result.IsOk)
@@ -122,8 +122,8 @@ namespace MagicLeap
         /// <param name="pcf">The PCF</param>
         private void HandleCreate(MLPCF pcf)
         {
-            _goodPCFCount++;
-            _goodPCFCountText.text = string.Format("PCFs Loaded: {0}", _goodPCFCount);
+            _pcfCount++;
+            _pcfCountText.text = string.Format(PCF_COUNT_TEXT_FORMAT, _pcfCount);
 
             AddPCFObject(pcf);
         }
@@ -137,6 +137,9 @@ namespace MagicLeap
         {
             if (result.IsOk)
             {
+                // This is only for demonstration purposes because we want to track all the PCFs found.
+                // Ideally in a production app, we only wish to track PCFs that have virtual content
+                // bound to them - which is already automatically done by MLPersistentBehavior.
                 MLPersistentCoordinateFrames.QueueForUpdates(pcf);
             }
             --_ongoingQueriesCount;
@@ -151,8 +154,9 @@ namespace MagicLeap
         void AddPCFObject(MLPCF pcf)
         {
             GameObject repObj = Instantiate(_prefab, Vector3.zero, Quaternion.identity);
-            repObj.name = pcf.GameObj.name;
-            repObj.transform.SetParent(pcf.GameObj.transform, false);
+            repObj.name = pcf.CFUID.ToString();
+            repObj.transform.position = pcf.Position;
+            repObj.transform.rotation = pcf.Orientation;
 
             PCFStatusText statusTextBehavior = repObj.GetComponent<PCFStatusText>();
             if (statusTextBehavior != null)
@@ -223,7 +227,8 @@ namespace MagicLeap
         {
             IsDebugMode = !IsDebugMode;
 
-            _goodPCFCountText.gameObject.SetActive(IsDebugMode);
+            _pcfCountText.gameObject.SetActive(IsDebugMode);
+
             foreach (GameObject pcfGO in _pcfObjs)
             {
                 pcfGO.SetActive(IsDebugMode);

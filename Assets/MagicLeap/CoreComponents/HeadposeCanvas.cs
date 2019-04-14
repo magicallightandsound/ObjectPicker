@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -10,15 +10,13 @@
 // ---------------------------------------------------------------------
 // %BANNER_END%
 
-using UnityEngine;
-
 namespace UnityEngine.XR.MagicLeap
 {
-    ///<summary>
+    /// <summary>
     /// Script used to position this Canvas object directly in front of the user by
     /// using lerp functionality to give it a smooth look. Components on the canvas
     /// should function normally.
-    ///</summary>
+    /// </summary>
     [RequireComponent(typeof(Canvas))]
     public class HeadposeCanvas : MonoBehaviour
     {
@@ -26,10 +24,10 @@ namespace UnityEngine.XR.MagicLeap
         [Tooltip("The distance from the camera that this object should be placed.")]
         public float CanvasDistance = 1.5f;
 
-        [Tooltip("The speed at which this object changes it's position.")]
+        [Tooltip("The speed at which this object changes its position.")]
         public float PositionLerpSpeed = 5f;
 
-        [Tooltip("The speed at which this object changes it's rotation.")]
+        [Tooltip("The speed at which this object changes its rotation.")]
         public float RotationLerpSpeed = 5f;
         #endregion
 
@@ -43,7 +41,7 @@ namespace UnityEngine.XR.MagicLeap
 
         #region Unity Methods
         /// <summary>
-        /// Initializes variables and verifies that necesary components exist.
+        /// Initializes variables and verifies that necessary components exist.
         /// </summary>
         void Awake()
         {
@@ -51,14 +49,14 @@ namespace UnityEngine.XR.MagicLeap
             _camera = _canvas.worldCamera;
 
             // Disable this component if
-            // it failed to initialzie properly.
-            if(_canvas == null)
+            // it failed to initialize properly.
+            if (_canvas == null)
             {
                 Debug.LogError("Error: HeadposeCanvas._canvas is not set, disabling script.");
                 enabled = false;
                 return;
             }
-            if(_camera == null)
+            if (_camera == null)
             {
                 Debug.LogError("Error: HeadposeCanvas._camera is not set, disabling script.");
                 enabled = false;

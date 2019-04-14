@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -30,7 +30,7 @@ namespace MagicLeap
 
         #region Private Variables
         [SerializeField, Tooltip("Text to show when viewing an object with this controller")]
-        private string _textOnView;
+        private string _textOnView = string.Empty;
         #endregion
 
         #region Public Properties

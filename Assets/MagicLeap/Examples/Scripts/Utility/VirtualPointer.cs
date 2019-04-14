@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -27,13 +27,13 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         [SerializeField, Space, Tooltip("Pointer Ray")]
-        private Transform _pointerRay;
+        private Transform _pointerRay = null;
 
         [SerializeField, Tooltip("Pointer Light")]
-        private Light _pointerLight;
+        private Light _pointerLight = null;
 
         [SerializeField, Tooltip("Color of the pointer light when no hit is detected")]
         private Color _pointerLightColorNoHit = Color.black;
@@ -42,8 +42,13 @@ namespace MagicLeap
         [SerializeField, Tooltip("Color of the pointer light when a button is pressed while a hit is detected")]
         private Color _pointerLightColorHitPress = Color.green;
 
-        private MediaPlayerButton _lastButtonHit;
+        private MediaPlayerButton _lastButtonHit = null;
         private bool _isGrabbing = false;
+
+        [SerializeField, Tooltip("Flag to allow grabbing with trigger")]
+        private bool _grabWithTrigger = true;
+        [SerializeField, Tooltip("Flag to allow grabbing with bumper")]
+        private bool _grabWithBumper = true;
         #endregion // Private Properties
 
         #region Unity Methods
@@ -170,7 +175,11 @@ namespace MagicLeap
                     _lastButtonHit.OnControllerButtonDown(button);
                 }
                 _pointerLight.color = _pointerLightColorHitPress;
-                _isGrabbing = true;
+
+                if (_grabWithBumper && button == MLInputControllerButton.Bumper)
+                {
+                    _isGrabbing = true;
+                }
             }
         }
 
@@ -185,7 +194,11 @@ namespace MagicLeap
                         _lastButtonHit.OnControllerButtonUp(button);
                     }
                     _pointerLight.color = _pointerLightColorHit;
-                    _isGrabbing = false;
+
+                    if (_grabWithBumper && button == MLInputControllerButton.Bumper)
+                    {
+                        _isGrabbing = false;
+                    }
                 }
                 else
                 {
@@ -203,7 +216,11 @@ namespace MagicLeap
                     _lastButtonHit.OnControllerTriggerDown(triggerValue);
                 }
                 _pointerLight.color = _pointerLightColorHitPress;
-                _isGrabbing = true;
+
+                if (_grabWithTrigger)
+                {
+                    _isGrabbing = true;
+                }
             }
         }
 
@@ -218,7 +235,11 @@ namespace MagicLeap
                         _lastButtonHit.OnControllerTriggerUp(triggerValue);
                     }
                     _pointerLight.color = _pointerLightColorHit;
-                    _isGrabbing = false;
+
+                    if (_grabWithTrigger)
+                    {
+                        _isGrabbing = false;
+                    }
                 }
                 else
                 {

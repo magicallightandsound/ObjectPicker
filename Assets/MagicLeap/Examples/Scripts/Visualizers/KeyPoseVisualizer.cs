@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -24,7 +24,7 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("KeyPose to track.")]
-        private MLHandKeyPose _keyPoseToTrack;
+        private MLHandKeyPose _keyPoseToTrack = MLHandKeyPose.NoPose;
 
         [Space, SerializeField, Tooltip("Flag to specify if left hand should be tracked.")]
         private bool _trackLeftHand = true;
@@ -32,7 +32,7 @@ namespace MagicLeap
         [SerializeField, Tooltip("Flag to specify id right hand should be tracked.")]
         private bool _trackRightHand = true;
 
-        private SpriteRenderer _spriteRenderer;
+        private SpriteRenderer _spriteRenderer = null;
         #endregion
 
         #region Unity Methods

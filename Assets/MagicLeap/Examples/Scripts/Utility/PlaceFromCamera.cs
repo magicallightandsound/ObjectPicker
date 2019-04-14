@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -10,6 +10,7 @@
 // ---------------------------------------------------------------------
 // %BANNER_END%
 
+using System.Collections;
 using UnityEngine;
 
 namespace MagicLeap
@@ -20,6 +21,13 @@ namespace MagicLeap
     /// </summary>
     public class PlaceFromCamera : MonoBehaviour
     {
+        public enum LookDirection
+        {
+            None = 0,
+            LookAtCamera = 1,
+            LookAwayFromCamera = 2
+        }
+
         #region Private Variables
         [SerializeField, Tooltip("The distance from the camera through its forward vector.")]
         private float _distance = 0.0f;
@@ -34,11 +42,25 @@ namespace MagicLeap
         [SerializeField, Tooltip("The approximate time it will take to reach the current rotation.")]
         private float _rotationSmoothTime = 5f;
 
+        [SerializeField, Tooltip("The direction the transform should face.")]
+        private LookDirection _lookDirection = LookDirection.LookAwayFromCamera;
+
         [SerializeField, Tooltip("Toggle to set position on awake.")]
         private bool _placeOnAwake = false;
 
         [SerializeField, Tooltip("Toggle to set position on update.")]
         private bool _placeOnUpdate = false;
+        #endregion
+
+        #region Public Properties
+        /// <summary>
+        /// When enabled automatic placement will occur on each Update cycle.
+        /// </summary>
+        public bool PlaceOnUpdate
+        {
+            get { return _placeOnUpdate; }
+            set { _placeOnUpdate = value; }
+        }
         #endregion
 
         #region Unity Methods
@@ -49,11 +71,11 @@ namespace MagicLeap
         {
             if (_placeOnAwake)
             {
-                UpdateTransform();
+                StartCoroutine(UpdateTransformEndOfFrame());
             }
         }
 
-        private void Update()
+        void Update()
         {
             if (_placeOnUpdate && Camera.main.transform.hasChanged)
             {
@@ -61,18 +83,29 @@ namespace MagicLeap
             }
         }
 
-        private void OnValidate()
+        void OnValidate()
         {
             _positionSmoothTime = Mathf.Max(0.01f, _positionSmoothTime);
             _rotationSmoothTime = Mathf.Max(0.01f, _rotationSmoothTime);
         }
         #endregion
 
-        #region Public Methods
+        #region Private Methods
+        /// <summary>
+        /// Reset position and rotation to match current camera values, after the end of frame.
+        /// </summary>
+        private IEnumerator UpdateTransformEndOfFrame()
+        {
+            // Wait until the camera has finished the current frame.
+            yield return new WaitForEndOfFrame();
+
+            UpdateTransform();
+        }
+
         /// <summary>
         /// Reset position and rotation to match current camera values.
         /// </summary>
-        public void UpdateTransform()
+        private void UpdateTransform()
         {
             Camera camera = Camera.main;
 
@@ -81,9 +114,28 @@ namespace MagicLeap
             Vector3 targetPosition = camera.transform.position + upVector + (camera.transform.forward * _distance);
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _positionVelocity, _positionSmoothTime);
 
+            Quaternion targetRotation = transform.rotation;
+
             // Rotate the object to face the camera.
-            Quaternion targetRotation = Quaternion.LookRotation(transform.position - camera.transform.position);
+            if (_lookDirection == LookDirection.LookAwayFromCamera)
+            {
+                targetRotation = Quaternion.LookRotation(transform.position - camera.transform.position);
+            }
+            else if (_lookDirection == LookDirection.LookAtCamera)
+            {
+                targetRotation = Quaternion.LookRotation(camera.transform.position - transform.position);
+            }
+
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime / _rotationSmoothTime);
+
+            if (_placeOnAwake)
+            {
+                // Snap to the location right away.
+                transform.position = targetPosition;
+                transform.rotation = targetRotation;
+
+                _placeOnAwake = false;
+            }
         }
         #endregion
     }

@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -21,7 +21,7 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("Radius of the orbit of the rockets")]
-        private Transform _xOffset;
+        private Transform _xOffset = null;
         #endregion
 
         #region Properties

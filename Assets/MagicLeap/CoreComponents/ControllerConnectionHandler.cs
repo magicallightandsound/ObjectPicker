@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -12,14 +12,13 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace UnityEngine.XR.MagicLeap
 {
     /// <summary>
     /// Class to automatically handle connection/disconnection events of an input device. By default,
     /// all device types are allowed but it could be modified through the inspector to limit which types to
-    /// allow. This class automatically handles the disconnection/reconnection of Control and MCA devices.
+    /// allow. This class automatically handles the disconnection/reconnection of Control and MLA devices.
     /// This class keeps track of all connected devices matching allowed types. If more than one allowed
     /// device is connected, the first one connected is returned.
     /// </summary>
@@ -39,7 +38,7 @@ namespace UnityEngine.XR.MagicLeap
         #endregion
 
         #region Private Variables
-        [SerializeField, BitMask(typeof(DeviceTypesAllowed)), Tooltip("Bitmask on which devices to allow.")]
+        [SerializeField, MagicLeapBitMask(typeof(DeviceTypesAllowed)), Tooltip("Bitmask on which devices to allow.")]
         private DeviceTypesAllowed _devicesAllowed = (DeviceTypesAllowed)~0;
 
         private List<MLInputController> _allowedConnectedDevices = new List<MLInputController>();
@@ -56,80 +55,93 @@ namespace UnityEngine.XR.MagicLeap
                 return (_allowedConnectedDevices.Count == 0) ? null : _allowedConnectedDevices[0];
             }
         }
+
+        /// <summary>
+        /// Getter for devices allowed bitmask
+        /// </summary>
+        public DeviceTypesAllowed DevicesAllowed
+        {
+            get
+            {
+                return _devicesAllowed;
+            }
+        }
         #endregion
 
         #region Public Events
         /// <summary>
-        /// Invoked only when the current controller was invalid and a controller attempted to connect.
-        /// First parameter is the newly connected controller if allowed, otherwise null.
+        /// Invoked when a valid controller has connected.
         /// </summary>
-        public System.Action<MLInputController> OnControllerConnected;
+        public event Action<byte> OnControllerConnected;
 
         /// <summary>
-        /// Invoked only when the current controller disconnects.
+        /// Invoked when an invalid controller has disconnected.
         /// </summary>
-        public System.Action<MLInputController> OnControllerDisconnected;
+        public event Action<byte> OnControllerDisconnected;
         #endregion
 
         #region Unity Methods
         /// <summary>
         /// Starts the MLInput, initializes the first controller, and registers the connection handlers
         /// </summary>
-        private void Awake()
+        void Awake()
         {
-            MLInputConfiguration config = new MLInputConfiguration(MLInputConfiguration.DEFAULT_TRIGGER_DOWN_THRESHOLD,
-                                                        MLInputConfiguration.DEFAULT_TRIGGER_UP_THRESHOLD,
-                                                        true);
-            MLResult result = MLInput.Start(config);
-            if (!result.IsOk)
+            if (_devicesAllowed == 0)
             {
-                Debug.LogErrorFormat("Error: ControllerConnectionHandler failed starting MLInput, disabling script. Reason: {0}", result);
+                Debug.LogErrorFormat("Error: ControllerConnectionHandler._devicesAllowed is invalid, disabling script.");
                 enabled = false;
                 return;
+
             }
 
-            RegisterConnectionHandlers();
+            bool requestCFUID = DevicesAllowed.HasFlag(DeviceTypesAllowed.ControllerLeft) ||
+                DevicesAllowed.HasFlag(DeviceTypesAllowed.ControllerRight);
+
+            if (!MLInput.IsStarted)
+            {
+                MLInputConfiguration config = new MLInputConfiguration(MLInputConfiguration.DEFAULT_TRIGGER_DOWN_THRESHOLD,
+                                                            MLInputConfiguration.DEFAULT_TRIGGER_UP_THRESHOLD,
+                                                            requestCFUID);
+                MLResult result = MLInput.Start(config);
+                if (!result.IsOk)
+                {
+                    Debug.LogErrorFormat("Error: ControllerConnectionHandler failed starting MLInput, disabling script. Reason: {0}", result);
+                    enabled = false;
+                    return;
+                }
+            }
+
+            MLInput.OnControllerConnected += HandleOnControllerConnected;
+            MLInput.OnControllerDisconnected += HandleOnControllerDisconnected;
+
             GetAllowedInput();
         }
 
         /// <summary>
         /// Unregisters the connection handlers and stops the MLInput
         /// </summary>
-        private void OnDestroy()
+        void OnDestroy()
         {
             if (MLInput.IsStarted)
             {
-                UnregisterConnectionHandlers();
+                MLInput.OnControllerDisconnected -= HandleOnControllerDisconnected;
+                MLInput.OnControllerConnected -= HandleOnControllerConnected;
+
                 MLInput.Stop();
             }
         }
+
         #endregion
 
         #region Private Methods
-        /// <summary>
-        /// Registers the on connection/disconnection handlers.
-        /// </summary>
-        private void RegisterConnectionHandlers()
-        {
-            MLInput.OnControllerConnected += HandleOnControllerConnected;
-            MLInput.OnControllerDisconnected += HandleOnControllerDisconnected;
-        }
-
-        /// <summary>
-        /// Unregisters the on connection/disconnection handlers.
-        /// </summary>
-        private void UnregisterConnectionHandlers()
-        {
-            MLInput.OnControllerDisconnected -= HandleOnControllerDisconnected;
-            MLInput.OnControllerConnected -= HandleOnControllerConnected;
-        }
-
         /// <summary>
         /// Fills allowed connected devices list with all the connected controllers matching
         /// types set in _devicesAllowed.
         /// </summary>
         private void GetAllowedInput()
         {
+            _allowedConnectedDevices.Clear();
+
             for (int i = 0; i < 2; ++i)
             {
                 MLInputController controller = MLInput.GetController(i);
@@ -203,6 +215,12 @@ namespace UnityEngine.XR.MagicLeap
                 }
 
                 _allowedConnectedDevices.Add(newController);
+
+                // Notify Listeners
+                if (OnControllerConnected != null)
+                {
+                    OnControllerConnected.Invoke(controllerId);
+                }
             }
         }
 
@@ -214,9 +232,18 @@ namespace UnityEngine.XR.MagicLeap
         /// <param name="controllerId">The id of the controller.</param>
         private void HandleOnControllerDisconnected(byte controllerId)
         {
-            _allowedConnectedDevices.RemoveAll((device) => device.Id == controllerId);
+            // Remove from the list of allowed devices.
+            int devicesRemoved = _allowedConnectedDevices.RemoveAll((device) => device.Id == controllerId);
+
+            // Notify Listeners of the disconnected device.
+            if (devicesRemoved > 0)
+            {
+                if (OnControllerDisconnected != null)
+                {
+                    OnControllerDisconnected.Invoke(controllerId);
+                }
+            }
         }
         #endregion
     }
-
 }

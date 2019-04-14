@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.MagicLeap;
 using System.Collections.Generic;
-
+using System.Threading;
 namespace MagicLeap
 {
     [RequireComponent(typeof(PrivilegeRequester))]
@@ -27,17 +27,27 @@ namespace MagicLeap
 
         #region Private Variables
         [SerializeField, Space, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         [SerializeField, Space]
-        private ImageCaptureEvent OnImageReceivedEvent;
+        private ImageCaptureEvent OnImageReceivedEvent = null;
 
         private bool _isCameraConnected = false;
         private bool _isCapturing = false;
-
         private bool _hasStarted = false;
+        private bool _doPrivPopup = false;
+        private bool _hasShownPrivPopup = false;
+        private Thread _captureThread = null;
 
-        private PrivilegeRequester _privilegeRequester;
+        /// <summary>
+        /// The example is using threads on the call to MLCamera.CaptureRawImageAsync to alleviate the blocking
+        /// call at the beginning of CaptureRawImageAsync, and the safest way to prevent race conditions here is to
+        /// lock our access into the MLCamera class, so that we don't accidentally shut down the camera
+        /// while the thread is attempting to work
+        /// </summary>
+        private object _cameraLockObject = new object();
+
+        private PrivilegeRequester _privilegeRequester = null;
         #endregion
 
         #region Unity Methods
@@ -68,12 +78,14 @@ namespace MagicLeap
         void OnDisable()
         {
             MLInput.OnControllerButtonDown -= OnButtonDown;
-
-            if (_isCameraConnected)
+            lock (_cameraLockObject)
             {
-                MLCamera.OnRawImageAvailable -= OnCaptureRawImageComplete;
-                _isCapturing = false;
-                DisableMLCamera();
+                if (_isCameraConnected)
+                {
+                    MLCamera.OnRawImageAvailable -= OnCaptureRawImageComplete;
+                    _isCapturing = false;
+                    DisableMLCamera();
+                }
             }
         }
 
@@ -87,11 +99,14 @@ namespace MagicLeap
         {
             if (pause)
             {
-                if (_isCameraConnected)
+                lock (_cameraLockObject)
                 {
-                    MLCamera.OnRawImageAvailable -= OnCaptureRawImageComplete;
-                    _isCapturing = false;
-                    DisableMLCamera();
+                    if (_isCameraConnected)
+                    {
+                        MLCamera.OnRawImageAvailable -= OnCaptureRawImageComplete;
+                        _isCapturing = false;
+                        DisableMLCamera();
+                    }
                 }
 
                 MLInput.OnControllerButtonDown -= OnButtonDown;
@@ -107,6 +122,16 @@ namespace MagicLeap
                 _privilegeRequester.OnPrivilegesDone -= HandlePrivilegesDone;
             }
         }
+
+        private void Update()
+        {
+            if (_doPrivPopup && !_hasShownPrivPopup)
+            {
+                Instantiate(Resources.Load("PrivilegeDeniedError"));
+                _doPrivPopup = false;
+                _hasShownPrivPopup = true;
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -117,13 +142,15 @@ namespace MagicLeap
         /// <param name="fileName">The name of the file to be saved to.</param>
         public void TriggerAsyncCapture()
         {
-            if (MLCamera.IsStarted && _isCameraConnected)
+            if (_captureThread == null || (!_captureThread.IsAlive))
             {
-                MLResult result = MLCamera.CaptureRawImageAsync();
-                if (result.IsOk)
-                {
-                    _isCapturing = true;
-                }
+                ThreadStart captureThreadStart = new ThreadStart(CaptureThreadWorker);
+                _captureThread = new Thread(captureThreadStart);
+                _captureThread.Start();
+            }
+            else
+            {
+                Debug.Log("Previous thread has not finished, unable to begin a new capture just yet.");
             }
         }
         #endregion
@@ -135,17 +162,25 @@ namespace MagicLeap
         /// </summary>
         private void EnableMLCamera()
         {
-            MLResult result = MLCamera.Start();
-            if (result.IsOk)
+            lock (_cameraLockObject)
             {
-                result = MLCamera.Connect();
-                _isCameraConnected = true;
-            }
-            else
-            {
-                Debug.LogErrorFormat("Error: ImageCaptureExample failed starting MLCamera, disabling script. Reason: {0}", result);
-                enabled = false;
-                return;
+                MLResult result = MLCamera.Start();
+                if (result.IsOk)
+                {
+                    result = MLCamera.Connect();
+                    _isCameraConnected = true;
+                }
+                else
+                {
+                    if (result.Code == MLResultCode.PrivilegeDenied)
+                    {
+                        Instantiate(Resources.Load("PrivilegeDeniedError"));
+                    }
+
+                    Debug.LogErrorFormat("Error: ImageCaptureExample failed starting MLCamera, disabling script. Reason: {0}", result);
+                    enabled = false;
+                    return;
+                }
             }
         }
 
@@ -154,12 +189,15 @@ namespace MagicLeap
         /// </summary>
         private void DisableMLCamera()
         {
-            if (MLCamera.IsStarted)
+            lock (_cameraLockObject)
             {
-                MLCamera.Disconnect();
-                // Explicitly set to false here as the disconnect was attempted.
-                _isCameraConnected = false;
-                MLCamera.Stop();
+                if (MLCamera.IsStarted)
+                {
+                    MLCamera.Disconnect();
+                    // Explicitly set to false here as the disconnect was attempted.
+                    _isCameraConnected = false;
+                    MLCamera.Stop();
+                }
             }
         }
 
@@ -170,9 +208,11 @@ namespace MagicLeap
         {
             if (!_hasStarted)
             {
-                EnableMLCamera();
-                MLCamera.OnRawImageAvailable += OnCaptureRawImageComplete;
-
+                lock (_cameraLockObject)
+                {
+                    EnableMLCamera();
+                    MLCamera.OnRawImageAvailable += OnCaptureRawImageComplete;
+                }
                 MLInput.OnControllerButtonDown += OnButtonDown;
 
                 _hasStarted = true;
@@ -189,6 +229,11 @@ namespace MagicLeap
         {
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: ImageCaptureExample failed to get requested privileges, disabling script. Reason: {0}", result);
                 enabled = false;
                 return;
@@ -217,8 +262,10 @@ namespace MagicLeap
         /// <param name="imageData">The raw data of the image.</param>
         private void OnCaptureRawImageComplete(byte[] imageData)
         {
-            _isCapturing = false;
-
+            lock (_cameraLockObject)
+            {
+                _isCapturing = false;
+            }
             // Initialize to 8x8 texture so there is no discrepency
             // between uninitalized captures and error texture
             Texture2D texture = new Texture2D(8, 8);
@@ -227,6 +274,28 @@ namespace MagicLeap
             if (status && (texture.width != 8 && texture.height != 8))
             {
                 OnImageReceivedEvent.Invoke(texture);
+            }
+        }
+
+        /// <summary>
+        /// Worker function to call the API's Capture function
+        /// </summary>
+        private void CaptureThreadWorker()
+        {
+            lock (_cameraLockObject)
+            {
+                if (MLCamera.IsStarted && _isCameraConnected)
+                {
+                    MLResult result = MLCamera.CaptureRawImageAsync();
+                    if (result.IsOk)
+                    {
+                        _isCapturing = true;
+                    }
+                    else if (result.Code == MLResultCode.PrivilegeDenied)
+                    {
+                        _doPrivPopup = true;
+                    }
+                }
             }
         }
         #endregion

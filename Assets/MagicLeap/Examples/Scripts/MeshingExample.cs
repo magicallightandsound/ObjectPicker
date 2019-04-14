@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -26,25 +26,25 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("The spatial mapper from which to update mesh params.")]
-        private MLSpatialMapper _mlSpatialMapper;
+        private MLSpatialMapper _mlSpatialMapper = null;
 
         [SerializeField, Tooltip("Visualizer for the meshing results.")]
-        private MeshingVisualizer _meshingVisualizer;
+        private MeshingVisualizer _meshingVisualizer = null;
 
         [SerializeField, Space, Tooltip("A visual representation of the meshing bounds.")]
-        private GameObject _visualBounds;
+        private GameObject _visualBounds = null;
 
         [SerializeField, Space, Tooltip("Flag specifying if mesh extents are bounded.")]
         private bool _bounded = false;
 
         [SerializeField, Space, Tooltip("The text to place mesh data on.")]
-        private Text _statusLabel;
+        private Text _statusLabel = null;
 
         [SerializeField, Space, Tooltip("Prefab to shoot into the scene.")]
-        private GameObject _shootingPrefab;
+        private GameObject _shootingPrefab = null;
 
         [SerializeField, Space, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         private MeshingVisualizer.RenderMode _renderMode = MeshingVisualizer.RenderMode.Wireframe;
         private int _renderModeCount;
@@ -57,7 +57,7 @@ namespace MagicLeap
         private const float MAX_BALL_SIZE = 0.5f;
         private const int BALL_LIFE_TIME = 10;
 
-        private Camera _camera;
+        private Camera _camera = null;
         #endregion
 
         #region Unity Methods

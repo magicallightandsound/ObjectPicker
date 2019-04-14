@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -21,11 +21,11 @@ namespace MagicLeap
     public class TransformFollower : MonoBehaviour
     {
         #region Public Variables
-        [Tooltip("Object to follow when mode is Object")]
+        [Tooltip("The object that should be followed.")]
         public Transform ObjectToFollow;
 
-        [Tooltip("Following should respect(local) or ignore(world) hirarchy")]
-        public bool LocalOrWorldSpace = true;
+        [Tooltip("Following should respect(local) or ignore(world) hierarchy.")]
+        public bool UseLocalTransform = true;
         #endregion
 
         #region Unity Methods
@@ -36,7 +36,7 @@ namespace MagicLeap
         {
             if (ObjectToFollow != null)
             {
-                if (LocalOrWorldSpace)
+                if (UseLocalTransform)
                 {
                     transform.localPosition = ObjectToFollow.localPosition;
                     transform.localRotation = ObjectToFollow.localRotation;

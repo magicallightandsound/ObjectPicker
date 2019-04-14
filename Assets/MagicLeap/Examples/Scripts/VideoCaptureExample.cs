@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -33,14 +33,14 @@ namespace MagicLeap
         private float _maxRecordingTime = 10.0f;
 
         [Space, SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
         [Space, Header("Events")]
         [SerializeField, Tooltip("Event called when recording starts")]
-        private UnityEvent OnVideoCaptureStarted;
+        private UnityEvent OnVideoCaptureStarted = null;
 
         [SerializeField, Tooltip("Event called when recording stops")]
-        private VideoCaptureEvent OnVideoCaptureEnded;
+        private VideoCaptureEvent OnVideoCaptureEnded = null;
 
         private const string _validFileFormat = ".mp4";
 
@@ -56,7 +56,7 @@ namespace MagicLeap
 
         private float _captureStartTime;
 
-        private PrivilegeRequester _privilegeRequester;
+        private PrivilegeRequester _privilegeRequester = null;
 
         private bool _hasStarted = false;
         #endregion
@@ -186,6 +186,11 @@ namespace MagicLeap
                 }
                 else
                 {
+                    if (result.Code == MLResultCode.PrivilegeDenied)
+                    {
+                        Instantiate(Resources.Load("PrivilegeDeniedError"));
+                    }
+
                     Debug.LogErrorFormat("Error: VideoCaptureExample failed to start video capture for {0}. Reason: {1}", fileName, MLCamera.GetErrorCode().ToString());
                 }
             }
@@ -213,6 +218,11 @@ namespace MagicLeap
                 }
                 else
                 {
+                    if (result.Code == MLResultCode.PrivilegeDenied)
+                    {
+                        Instantiate(Resources.Load("PrivilegeDeniedError"));
+                    }
+
                     Debug.LogErrorFormat("Error: VideoCaptureExample failed to end video capture. Error Code: {0}", MLCamera.GetErrorCode().ToString());
                 }
             }
@@ -238,6 +248,11 @@ namespace MagicLeap
             }
             else
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: VideoCaptureExample failed starting MLCamera, disabling script. Reason: {0}", result);
                 enabled = false;
                 return;
@@ -287,6 +302,11 @@ namespace MagicLeap
         {
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: VideoCaptureExample failed to get all requested privileges, disabling script. Reason: {0}", result);
                 enabled = false;
                 return;

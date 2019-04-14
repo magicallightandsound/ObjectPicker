@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -22,7 +22,7 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("The reference to the class to handle results from.")]
-        private BaseRaycast _raycast;
+        private BaseRaycast _raycast = null;
 
         [SerializeField, Tooltip("The default distance for the cursor when a hit is not detected.")]
         private float _defaultDistance = 9.0f;
@@ -31,13 +31,13 @@ namespace MagicLeap
         private bool _scaleWhenClose = true;
 
         // Stores default color
-        private Color _color;
+        private Color _color = Color.clear;
 
         // Stores result of raycast
         private bool _hit = false;
 
         // Stores Renderer component
-        private Renderer _render;
+        private Renderer _render = null;
         #endregion
 
         #region Public Properties

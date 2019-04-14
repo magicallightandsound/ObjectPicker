@@ -1,42 +1,52 @@
 How to use ML Music Service Example:
 
-For automatic setup, click on the Setup Music Service Example button under the MagicLeap drop down menu in the Unity Editor and build and run
-the MusicService example without modifying the bundle identifier on the player settings.
+For automatic setup, see the following steps.
+
+1) Click on the Setup Music Service Example button under the
+   MagicLeap drop down menu in the Unity Editor
+
+   Verify that it built successfully by checking the console. The following line
+   should appear:
+
+   "Successfully setup project for music service example."
+
+2) Build and run the MusicService example without modifying
+   the bundle identifier on the player settings.
 
 For manual setup, see the following steps.
 
-Step 1) Copy following songs from MagicLeap\BackgroundMusicExample\StreamingAssets\BackgroundMusicExample to StreamingAssets\BackgroundMusicExample:
-Tune1
-Tune2
-Tune3
+1) Copy following songs;
+    Tune1.mp3
+    Tune2.mp3
+    Tune3.ogg
+   from Assets\MagicLeap\BackgroundMusicExample\StreamingAssets\BackgroundMusicExample
+   to Assets\StreamingAssets\BackgroundMusicExample
 
-Step 2) Use the Music_Manifest that is in Assets\MagicLeap\BackgroundMusicService, rename it to Manifest.xml, put in Assets\Plugins\Lumin\
+2) Use the music_manifest.xml from Assets\MagicLeap\BackgroundMusicService, rename it
+   to manifest.xml, and put in Assets\Plugins\Lumin\
 
-Step 3) Enable the following privileges in XR Publishing Settings:
-ConnectBackgroundMusicService
-ControllerPose
-MusicService
-RegisterBackgroundMusicService
+3) You can build ExampleMusicProvider by calling mabu on the ExampleMusicProvider.mabu like so;
+    mabu <path/to/Assets/MagicLeap/BackgroundMusicExample/ExampleMusicProvider.mabu> -t device
 
-Step 4) Make sure "example_music_provider" binary file is located at the root of the Unity project
-Step 4.A) You can build example_music_provider by calling mabu on the example_music_provider.mabu file located in this folder:
-mabu <path/to/your/unityproject/Assets/MagicLeap/BackgroundMusicExample/example_music_provider.mabu> -t device
+   This will generate the binary, named "ExampleMusicProvider" in a .out folder
+   which you can move to the root of the Unity project.
 
-This will generate the  binary in a .out folder which you can then place in the root folder
+4) Follow standard building procedures for a single scene, making sure music service
+   scene is in build settings, and setting your bundle identifier (com.magicleap.unitymusicexample, for instance)
 
-Step 5) Follow standard building procedures for a single scene, making sure music service scene is in build settings, and setting your bundle identifier (com.magicleap.unitymusicexample, for instance)
-
-Step 6) modify the project *.package. This only gets generated at build time, so you may have to build once, then modify, then build again.
-Add the following under ######### DO NOT EDIT ABOVE #########
+5) Modify the project *.package. This only gets generated at build time when none currently exist.
+   You may have to build once to create it first, then modify, then build again to use the modified one.
+   Add the following under ######### DO NOT EDIT ABOVE #########
 
 DATAS= \
-    example_music_provider \
+    ExampleMusicProvider : bin/ \
 
+6) After building, open the mpk and verify that "ExampleMusicProvider" is in the mpk in the bin
+   folder, beside Player.elf. Verify the correct manifest is in there with two components.
 
-Step 7) After building, open the mpk and verify that "example_music_provider" is in the mpk at the base level. Verify the correct manifest is in there with two components.
-
-Step 8) Launch on device. This will launch both components. If you attempt to terminate this application, the second component (the music provider) will be stuck open and will result in AllocFailed if you try to launch again.
-You need to execute terminate twice:
-mldb terminate unity.package.name.here .fullscreen
-mldb terminate unity.package.name.here .example_music_provider
-
+7) Launch on device. This will launch both components. If you attempt to terminate this
+   application, the second component (the music provider) will be stuck open and will
+   result in AllocFailed if you try to launch again.
+    You need to execute terminate twice:
+    mldb terminate unity.package.name.here .fullscreen
+    mldb terminate unity.package.name.here .example_music_provider

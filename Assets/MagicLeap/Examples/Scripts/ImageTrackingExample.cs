@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -40,18 +40,18 @@ namespace MagicLeap
         private ViewMode _viewMode = ViewMode.All;
 
         [SerializeField, Tooltip("Image Tracking Visualizers to control")]
-        private ImageTrackingVisualizer [] _visualizers;
+        private ImageTrackingVisualizer [] _visualizers = null;
 
         [SerializeField, Tooltip("The View Mode text.")]
-        private Text _viewModeLabel;
+        private Text _viewModeLabel = null;
 
         [SerializeField, Tooltip("The Tracker Status text.")]
-        private Text _trackerStatusLabel;
+        private Text _trackerStatusLabel = null;
 
         [Space, SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
-        private PrivilegeRequester _privilegeRequester;
+        private PrivilegeRequester _privilegeRequester = null;
 
         private bool _hasStarted = false;
         #endregion
@@ -178,6 +178,11 @@ namespace MagicLeap
         {
             if (!result.IsOk)
             {
+                if (result.Code == MLResultCode.PrivilegeDenied)
+                {
+                    Instantiate(Resources.Load("PrivilegeDeniedError"));
+                }
+
                 Debug.LogErrorFormat("Error: ImageTrackingExample failed to get requested privileges, disabling script. Reason: {0}", result);
                 enabled = false;
                 return;

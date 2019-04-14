@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -25,10 +25,10 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("The hand to visualize.")]
-        private MLHandType _handType;
+        private MLHandType _handType = MLHandType.Left;
 
         [SerializeField, Tooltip("The GameObject to use for the Hand Center.")]
-        private Transform _center;
+        private Transform _center = null;
 
         [Header("Hand Keypoint Colors")]
 
@@ -50,12 +50,12 @@ namespace MagicLeap
         [SerializeField, Tooltip("The color assigned to the wrist keypoints.")]
         private Color _wristColor = Color.white;
 
-        private List<Transform> _pinkyFinger;
-        private List<Transform> _ringFinger;
-        private List<Transform> _middleFinger;
-        private List<Transform> _indexFinger;
-        private List<Transform> _thumb;
-        private List<Transform> _wrist;
+        private List<Transform> _pinkyFinger = null;
+        private List<Transform> _ringFinger = null;
+        private List<Transform> _middleFinger = null;
+        private List<Transform> _indexFinger = null;
+        private List<Transform> _thumb = null;
+        private List<Transform> _wrist = null;
         #endregion
 
         #region Private Properties

@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
 //
-// Copyright (c) 2018 Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) 2019 Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Creator Agreement, located
 // here: https://id.magicleap.com/creator-terms
 //
@@ -27,9 +27,9 @@ namespace MagicLeap
     {
         #region Private Variables
         [SerializeField, Tooltip("ControllerConnectionHandler reference.")]
-        private ControllerConnectionHandler _controllerConnectionHandler;
+        private ControllerConnectionHandler _controllerConnectionHandler = null;
 
-        private Text _controllerStatusText;
+        private Text _controllerStatusText = null;
         #endregion
 
         #region Unity Methods
@@ -38,19 +38,45 @@ namespace MagicLeap
         /// </summary>
         void Awake()
         {
+            _controllerStatusText = gameObject.GetComponent<Text>();
+
             if (_controllerConnectionHandler == null)
             {
                 Debug.LogError("Error: ControllerStatusText._controllerConnectionHandler is not set, disabling script.");
                 enabled = false;
                 return;
             }
-            _controllerStatusText = gameObject.GetComponent<Text>();
+
+            _controllerConnectionHandler.OnControllerConnected += HandleOnControllerChanged;
+            _controllerConnectionHandler.OnControllerDisconnected += HandleOnControllerChanged;
         }
 
+        void Start()
+        {
+            // Wait until the next cycle to check the status.
+            UpdateStatus();
+        }
+
+        void OnDestroy()
+        {
+            _controllerConnectionHandler.OnControllerConnected -= HandleOnControllerChanged;
+            _controllerConnectionHandler.OnControllerDisconnected -= HandleOnControllerChanged;
+        }
+
+        void OnApplicationPause(bool pause)
+        {
+            if(!pause)
+            {
+                UpdateStatus();
+            }
+        }
+        #endregion
+
+        #region Private Methods
         /// <summary>
-        /// Updates text to specify the latest status of the controller.
+        /// Update the text for the currently connected Control or MCA device.
         /// </summary>
-        void Update()
+        private void UpdateStatus()
         {
             if (_controllerConnectionHandler.enabled)
             {
@@ -64,7 +90,7 @@ namespace MagicLeap
                     }
                     else if (controller.Type == MLInputControllerType.MobileApp)
                     {
-                        _controllerStatusText.text = "MCA Connected";
+                        _controllerStatusText.text = "MLA Connected";
                         _controllerStatusText.color = Color.green;
                     }
                     else
@@ -84,6 +110,13 @@ namespace MagicLeap
                 _controllerStatusText.text = "Input Failed to Start";
                 _controllerStatusText.color = Color.red;
             }
+        }
+        #endregion
+
+        #region Event Handlers
+        private void HandleOnControllerChanged(byte controllerId)
+        {
+            UpdateStatus();
         }
         #endregion
     }
