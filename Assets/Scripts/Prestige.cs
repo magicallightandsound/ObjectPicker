@@ -347,6 +347,26 @@ namespace Prestige
             MLInput.OnTriggerUp += callback;
         }
 
+        public void RegisterButtonDownHandler(MLInput.ControllerButtonDelegate callback)
+        {
+            MLInput.OnControllerButtonDown += callback;
+        }
+
+        public void RegisterButtonUpHandler(MLInput.ControllerButtonDelegate callback)
+        {
+            MLInput.OnControllerButtonUp += callback;
+        }
+
+        public void UnregisterButtonDownHandler(MLInput.ControllerButtonDelegate callback)
+        {
+            MLInput.OnControllerButtonDown -= callback;
+
+        }
+
+        public void UnregisterButtonUpHandler(MLInput.ControllerButtonDelegate callback)
+        {
+            MLInput.OnControllerButtonUp -= callback;
+        }
 
         public MLInputController GetMLInputController()
         {

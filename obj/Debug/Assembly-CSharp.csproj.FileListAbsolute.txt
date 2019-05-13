@@ -351,3 +351,6 @@ C:\Users\Rodney\Documents\MLProjects\ObjectPicker\obj\Debug\Assembly-CSharp.cspr
 C:\Users\Rodney\Documents\MLProjects\ObjectPicker\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\Rodney\Documents\MLProjects\ObjectPicker\obj\Debug\Assembly-CSharp.dll
 C:\Users\Rodney\Documents\MLProjects\ObjectPicker\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Rodney\Documents\MLProjects\ObjectPicker\Temp\bin\Debug\Boo.Lang.dll
+C:\Users\Rodney\Documents\MLProjects\ObjectPicker\Temp\bin\Debug\UnityEditor.Lumin.Extensions.dll
+C:\Users\Rodney\Documents\MLProjects\ObjectPicker\Temp\bin\Debug\UnityEditor.UI.dll

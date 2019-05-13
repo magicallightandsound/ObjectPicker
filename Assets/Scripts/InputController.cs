@@ -50,8 +50,14 @@ public class InputController : MonoBehaviour
     public delegate void TriggerDown(byte controllerId, float value, GameObject gameObject, Transform cursorTransform);
     public delegate void TriggerUp(byte controllerId, float value, GameObject gameObject, Transform cursorTransform);
 
+    public delegate void ButtonDown(byte controllerId, MLInputControllerButton button, GameObject gameObject, Transform cursorTransform);
+    public delegate void ButtonUp(byte controllerId, MLInputControllerButton button, GameObject gameObject, Transform cursorTransform);
+
     public static event TriggerDown OnTriggerDown;
     public static event TriggerUp OnTriggerUp;
+
+    public static event ButtonDown OnButtonDown;
+    public static event ButtonUp OnButtonUp;
 
     public delegate void TouchpadGestureStart(byte controllerId,
         MLInputControllerTouchpadGesture gesture,
@@ -115,6 +121,9 @@ public class InputController : MonoBehaviour
         inputController.RegisterTriggerUpHandler(OnTriggerUpHandler);
         inputController.RegisterTriggerDownHandler(OnTriggerDownHandler);
 
+        inputController.RegisterButtonUpHandler(OnButtonUpHandler);
+        inputController.RegisterButtonDownHandler(OnButtonDownHandler);
+
         inputController.RegisterTouchpadGestureStartHandler(OnTouchpadGestureStartHandler);
         inputController.RegisterTouchpadGestureEndHandler(OnTouchpadGestureEndHandler);
     }
@@ -164,6 +173,42 @@ public class InputController : MonoBehaviour
 
         OnTriggerUp(controllerId, triggerValue, hoveredGameObject, cursorTransform);
     }
+
+
+    virtual public void OnButtonDownHandler(byte controllerId, MLInputControllerButton button)
+    {
+        if (OnButtonDown == null)
+        {
+            return;
+        }
+
+        GameObject hoveredGameObject = cursor.GetHoveredGameObject();
+        Transform cursorTransform = cursor.GetAdjustedCursorTransform();
+
+        if (hoveredGameObject == null)
+        {
+            OnButtonDown(controllerId, button, null, cursorTransform);
+        }
+        else
+        {
+            OnButtonDown(controllerId, button, hoveredGameObject, cursorTransform);
+        }
+
+    }
+
+    virtual public void OnButtonUpHandler(byte controllerId, MLInputControllerButton button)
+    {
+        if (OnButtonUp == null)
+        {
+            return;
+        }
+
+        GameObject hoveredGameObject = cursor.GetHoveredGameObject();
+        Transform cursorTransform = cursor.GetAdjustedCursorTransform();
+
+        OnButtonUp(controllerId, button, hoveredGameObject, cursorTransform);
+    }
+
 
     virtual public void OnTouchpadGestureStartHandler(byte controllerId, MLInputControllerTouchpadGesture gesture)
     {
