@@ -3,7 +3,7 @@ Magic Leap project that demos object picking and placement.
 
 
 Use the Magic Leap controller and point the cursor at a Gameobject. Pull the trigger then use the controller to move the Gameobject around in worldspace.
-
+Swipe the touchpad to rotate the object or swipe the outer ring of the touchpad clockwise or counter-clockwise to rotate.
 
 
 Requirements:
