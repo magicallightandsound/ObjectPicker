@@ -67,8 +67,12 @@ public class InputController : MonoBehaviour
         MLInputControllerTouchpadGesture gesture,
         Cursor cursor);
 
+    public delegate void TouchpadGestureState(MLInputControllerTouchpadGesture gesture);
+
     public static event TouchpadGestureEnd OnTouchpadGestureEnd;
     public static event TouchpadGestureStart OnTouchpadGestureStart;
+
+    public static event TouchpadGestureState OnTouchpadGestureState;
 
     private Prestige.InputController inputController;
 
@@ -105,6 +109,20 @@ public class InputController : MonoBehaviour
             {
                 transform.position = mlInputController.Position;
                 transform.rotation = mlInputController.Orientation;
+
+                switch (mlInputController.TouchpadGestureState)
+                {
+                    case MLInputControllerTouchpadGestureState.End:
+                        break;
+                    case MLInputControllerTouchpadGestureState.Continue:
+                        OnTouchpadGestureState(mlInputController.TouchpadGesture);
+                        break;
+                    case MLInputControllerTouchpadGestureState.Start:
+                        break;
+                    default:
+                        break;
+                }
+                
             }
             
         }
@@ -126,6 +144,8 @@ public class InputController : MonoBehaviour
 
         inputController.RegisterTouchpadGestureStartHandler(OnTouchpadGestureStartHandler);
         inputController.RegisterTouchpadGestureEndHandler(OnTouchpadGestureEndHandler);
+
+         
     }
 
     private void OnDisable()
